@@ -16,6 +16,14 @@ o que torna o processo muitas vezes demorado e desorganizado.
 
 ![apera](https://user-images.githubusercontent.com/102368879/236288398-5cda0451-3c8e-4555-a5ad-a5bac83636fd.png)
 
+## Estrutura
+*(Em breve link do figma)*
+- Tela de login e cadastro (Realizar autenticação)
+- Tela de dados pessoais (Ver os dados pessoais, email, alterar senha)
+- Tela principal com os valores atualizados das ações (Home)
+- Tela de detalhes da ação selecionada (Preço, variação, min e max de um periodo)
+- Tela de dashboard de minhas ações (Lista das minhas ações, cadastrar: ação, venda e compra)
+
 ## Autores
 - [@JeanNesi](https://github.com/JeanNesi)
 - [@lucasrguidi](https://github.com/lucasrguidi)
