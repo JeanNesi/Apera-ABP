@@ -27,7 +27,7 @@ o que torna o processo muitas vezes demorado e desorganizado.
 ## Características
 
 **Buscar qualquer ação em qualquer lugar da plataforma:**
-Através de um campo de busca no nossa barra de navegação será possivel acessar os detalhes 
+Através de um campo de busca na barra de navegação será possivel acessar os detalhes 
 e buscar qualquer ação, indiferente da tela em que o usuário esteja.
 
 **Sistema responsivo:**
