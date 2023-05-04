@@ -21,8 +21,19 @@ o que torna o processo muitas vezes demorado e desorganizado.
 - Tela de login e cadastro (Realizar autenticação)
 - Tela de dados pessoais (Ver os dados pessoais, email, alterar senha)
 - Tela principal com os valores atualizados das ações (Home)
-- Tela de detalhes da ação selecionada (Preço, variação, min e max de um periodo)
-- Tela de dashboard de minhas ações (Lista das minhas ações, cadastrar: ação, venda e compra)
+- Tela de detalhes da ação (Preço, variação, min e max de um periodo)
+- Tela de dashboard de meus investimento (Lista das minhas ações, cadastrar: ação, venda e compra)
+
+## Características
+
+**Buscar qualquer ação em qualquer lugar da plataforma:**<br>
+Através de um campo de busca no nossa barra de navegação será possivel acessar os detalhes <br>
+e buscar qualquer ação, indiferente da tela em que o usuário esteja.
+
+**Sistema responsivo:**
+É ideal para o um usuário conseguir acessar a plataforma de diferentes tipos de dispositivo. <br>
+Por isso a plataforma será totalmente responsiva, para que o usuário tenha uma boa experiência tanto <br>
+utilizando pelo computador quanto pelo celular.
 
 ## Autores
 - [@JeanNesi](https://github.com/JeanNesi)
