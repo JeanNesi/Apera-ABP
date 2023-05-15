@@ -51,7 +51,8 @@ export const Login = () => {
                   label="Login"
                   loading={onQuery}
                   type="submit"
-                  color={theme.color.black}
+                  color={theme.color.primary}
+                  bgColor={theme.color.white}
                 />
               </Form>
             </Style.LoginContainer>

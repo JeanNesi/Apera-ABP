@@ -8,6 +8,7 @@ export const Background = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: ${theme.size.sm} ${theme.size.md};
+  background-color: ${theme.color.primary};
 `;
 
 export const InputWrapper = styled.div`
@@ -27,7 +28,7 @@ export const InputWrapper = styled.div`
 
   > h2 {
     margin-bottom: ${theme.size.sm};
-    color: ${theme.color.secondary};
+    color: ${theme.color.primary};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

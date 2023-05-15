@@ -8,7 +8,7 @@ export default createGlobalStyle`
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif;;
+    font-family: 'Inter', sans-serif;
   }
 
   a {
@@ -28,29 +28,29 @@ export default createGlobalStyle`
   h1 {
     font-style: normal;
     font-weight: 700;
-    font-size: 40px;
-    line-height: 44px;
+    font-size: 48px;
+    line-height: 58px;
   }
 
   h2 {
     font-style: normal;
     font-weight: 700;
-    font-size: 32px;
-    line-height: 36px;
+    font-size: 40px;
+    line-height: 48px;
   }
 
   h3 {
     font-style: normal;
     font-weight: 700;
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 32px;
+    line-height: 39px;
   }
 
   h4 {
     font-style: normal;
     font-weight: 500;
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 20px;
+    line-height: 29px;
   }
 
   h5 {
@@ -64,7 +64,7 @@ export default createGlobalStyle`
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
-    line-height: 22px;
+    line-height: 19px;
   }
 
   .p1{

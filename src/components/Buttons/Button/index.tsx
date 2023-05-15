@@ -12,9 +12,9 @@ export const Button = ({
   loading = false,
   outlined = false,
   align,
-  bgColor = theme.color.primary4,
+  bgColor = theme.color.primary,
   borderless = false,
-  color = theme.color.secondary,
+  color = theme.color.white,
   ...rest
 }: IButton) => (
   <Background align={align}>

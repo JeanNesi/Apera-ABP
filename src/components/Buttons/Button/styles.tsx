@@ -12,7 +12,7 @@ export const SpinnerContent = styled.div`
   align-items: center;
   justify-content: center;
   border: 3px solid ${theme.color.black};
-  border-top: 3px solid ${theme.color.primary3};
+  border-top: 3px solid ${theme.color.primary30};
   border-radius: 50%;
   width: ${theme.size.sm};
   height: ${theme.size.sm};
