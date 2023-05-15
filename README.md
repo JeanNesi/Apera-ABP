@@ -17,7 +17,7 @@ o que torna o processo muitas vezes demorado e desorganizado.
 ![apera](https://user-images.githubusercontent.com/102368879/236288398-5cda0451-3c8e-4555-a5ad-a5bac83636fd.png)
 
 ## Estrutura
-*(https://www.figma.com/file/yJG3kP4JHAfzJqMfxDuGMI/Apera---Jean-e-Kau%C3%A3?type=design&node-id=0%3A1&t=YDFVgM4W98vHwNU6-1)*
+*https://www.figma.com/file/yJG3kP4JHAfzJqMfxDuGMI/Apera---Jean-e-Kau%C3%A3?type=design&node-id=0%3A1&t=YDFVgM4W98vHwNU6-1*
 - Tela de login e cadastro (Realizar autenticação)
 - Tela de dados pessoais (Ver os dados pessoais, email, alterar senha)
 - Tela principal com os valores atualizados das ações (Home)
