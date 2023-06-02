@@ -2,55 +2,17 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const InputContainer = styled.div<{
-  labelColor: string;
-  error: boolean;
+  labelcolor: string;
+  error?: boolean;
   passwordPlaceholder?: boolean;
 }>`
   display: flex;
   flex-direction: column;
   > p {
-    color: ${({ labelColor }) => labelColor};
+    color: ${({ labelcolor }) => labelcolor};
     margin-bottom: ${theme.size.xxsm};
   }
   width: 100%;
-
-  // CÓDIGOS PARA PLACEHOLDER DE SENHA FICAR PRETO E SUMIR NO FOCUS,
-  // APENAS PARA O VISUAL ↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-  ${({ passwordPlaceholder }) =>
-    passwordPlaceholder &&
-    `
-    > .opera input[type="password"],
-    .webkit input[type="password"],
-    input[type="password"] {
-
-      border: 1px solid ${theme.color.gray4};
-
-      ::placeholder {
-        /* Chrome, Firefox, Opera, Safari 10.1+ */
-        color: black;
-        opacity: 1; /* Firefox */
-      }
-      :-ms-input-placeholder {
-        /* Internet Explorer 10-11 */
-        color: black;
-      }
-      ::-ms-input-placeholder {
-        /* Microsoft Edge */
-        color: black;
-      }
-    }
-    input[type="password"]:focus::-webkit-input-placeholder {
-      color: transparent !important;
-    }
-    input[type="password"]:focus::-moz-placeholder {
-      color: transparent !important;
-    }
-    input[type="password"]:focus:-moz-placeholder {
-      color: transparent !important;
-   }
- `}
-  // CÓDIGOS PARA PLACEHOLDER DE SENHA FICAR PRETO E SUMIR NO FOCUS,
-  // APENAS PARA O VISUAL ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
 
   ${({ error }) =>
     error &&
@@ -63,9 +25,9 @@ export const InputContainer = styled.div<{
  `}
 `;
 
-export const ErrorMessage = styled.div<{ errorColor: string }>`
+export const ErrorMessage = styled.div<{ errorcolor: string }>`
   display: flex;
-  color: ${({ errorColor }) => errorColor};
+  color: ${({ errorcolor }) => errorcolor};
 
   > p {
     animation: scale-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

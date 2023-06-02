@@ -21,10 +21,14 @@ const FormikInputBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
   },
   ref,
 ) => (
-  <InputContainer error={!!error} passwordPlaceholder={passwordPlaceholder} labelColor={labelColor}>
+  <InputContainer
+    error={error !== null ? true : undefined}
+    passwordPlaceholder={passwordPlaceholder}
+    labelcolor={labelColor}
+  >
     {label && <p className="p5">{label}</p>}
     <Field id={name} name={name} ref={ref} {...rest} />
-    <ErrorMessage errorColor={errorColor}>{!!error && <p className="p9">{error}</p>}</ErrorMessage>
+    <ErrorMessage errorcolor={errorColor}>{!!error && <p className="p9">{error}</p>}</ErrorMessage>
   </InputContainer>
 );
 export const FormikInput = forwardRef(FormikInputBase);

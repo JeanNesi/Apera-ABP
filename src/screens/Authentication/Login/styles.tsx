@@ -14,17 +14,9 @@ export const Background = styled.div`
 export const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: center;
 
-  background-color: ${theme.color.white};
-  border-radius: ${theme.size.xxsm};
   gap: ${theme.size.xsm};
-  padding: ${theme.size.md};
-
-  .forgotPassword {
-    height: 16px;
-    margin-top: 0;
-    color: ${theme.color.secondary};
-  }
 
   > h2 {
     margin-bottom: ${theme.size.sm};
@@ -37,11 +29,15 @@ export const InputWrapper = styled.div`
 
 export const LoginContainer = styled.div`
   width: 100%;
-  max-width: 450px;
+  max-width: 364px;
 
   display: flex;
   flex-direction: column;
   margin-top: ${theme.size.xxxxlg};
+
+  img {
+    width: 130px;
+  }
 
   button {
     margin-top: ${theme.size.xsm};

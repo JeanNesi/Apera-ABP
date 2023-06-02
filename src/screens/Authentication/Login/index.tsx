@@ -11,6 +11,8 @@ import { FormikInput } from '../../../components/Form/FormikInput';
 import * as Style from './styles';
 
 import { theme } from '../../../styles/theme';
+import { icons } from '../../../assets/icons';
+import { schema } from './utils/functions';
 
 export const Login = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
@@ -18,6 +20,7 @@ export const Login = () => {
   return (
     <Style.Background>
       <Formik
+        validationSchema={schema}
         initialValues={{ email: '', password: '' }}
         onSubmit={async () => {
           setOnQuery(true);
@@ -28,7 +31,7 @@ export const Login = () => {
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <h2>Login</h2>
+                  <img src={icons.aperaLogo} alt="" />
                   <FormikInput
                     name="email"
                     label="E-mail"
@@ -47,12 +50,13 @@ export const Login = () => {
                   />
                 </Style.InputWrapper>
                 <Button
-                  align="center"
+                  fullWidth
+                  center
                   label="Login"
                   loading={onQuery}
                   type="submit"
                   color={theme.color.primary}
-                  bgColor={theme.color.white}
+                  bgColor={theme.color.success}
                 />
               </Form>
             </Style.LoginContainer>

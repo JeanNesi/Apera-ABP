@@ -21,8 +21,8 @@ export default createGlobalStyle`
   }
 
   body {
-    background-color: ${theme.color.gray1};
-    color: ${theme.color.gray5};
+    background-color: ${theme.color.primary};
+    color: ${theme.color.gray2};
   }
 
   h1 {
@@ -145,13 +145,14 @@ export default createGlobalStyle`
     font-style: normal;
     outline: none;
     width: 100%;
-    background-color: ${theme.color.white};
+    background-color: transparent;
     border: 1px solid ${theme.color.gray4};
-    height: 40px;
+    color: ${theme.color.gray2};
+    height: 56px;
     border-radius: ${theme.size.xxsm};
     padding: ${theme.size.xsm} ${theme.size.sm};
     :placeholder-shown{
-      border: 1px solid ${theme.color.gray3};
+      border: 1px solid ${theme.color.gray1};
     }
 
   }

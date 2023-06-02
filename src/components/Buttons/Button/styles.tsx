@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
-export const Background = styled.div<{ align?: string }>`
+export const Background = styled.div<{ center: boolean }>`
   width: fit-content;
-  ${({ align }) => align && `width: 100%; display: flex; justify-content: ${align};`}
+  ${({ center }) => center && `width: 100%; display: flex; justify-content: center;`}
   height: fit-content;
 `;
 
@@ -11,8 +11,8 @@ export const SpinnerContent = styled.div`
   display: none;
   align-items: center;
   justify-content: center;
-  border: 3px solid ${theme.color.black};
-  border-top: 3px solid ${theme.color.primary30};
+  border: 3px solid ${theme.color.white};
+  border-top: 3px solid ${theme.color.primary};
   border-radius: 50%;
   width: ${theme.size.sm};
   height: ${theme.size.sm};
@@ -35,23 +35,26 @@ export const ContainerButton = styled.div<{
   outlined: boolean;
   bgColor: string;
   borderless: boolean;
-  color: string;
+  fullWidth: boolean;
 }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: fit-content;
+  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'fit-content')};
 
   > button {
     transition: 0.5s;
     display: flex;
     align-items: center;
-    gap: ${theme.size.xsm};
     justify-content: center;
-    color: ${({ color }) => color};
-    height: 40px;
-    min-width: 40px;
+    gap: ${theme.size.xsm};
+    width: 100%;
+
+    > img {
+      width: 24px;
+      height: 24px;
+    }
 
     :hover {
       opacity: 0.7;
@@ -76,8 +79,9 @@ export const ContainerButton = styled.div<{
       padding: 0;
     `}
 
-    ${({ loading }) =>
-      loading &&
-      `border-radius: 100%; padding: ${theme.size.xsm}; opacity: 1; pointer-events: none;`}
+    ${({ loading, fullWidth }) =>
+      loading && !fullWidth
+        ? `border-radius: 100%; padding: ${theme.size.xsm}; opacity: 1; pointer-events: none;`
+        : 'height: 40px'}
   }
 `;

@@ -2,11 +2,12 @@ import { ButtonHTMLAttributes } from 'react';
 
 export interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
+  icon?: string;
   bgColor?: string;
   disable?: boolean;
   outlined?: boolean;
   loading?: boolean;
-  align?: 'flex-end' | 'flex-start' | 'center';
+  center?: boolean;
   borderless?: boolean;
-  color?: string;
+  fullWidth?: boolean;
 }

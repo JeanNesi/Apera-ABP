@@ -8,26 +8,34 @@ import { IButton } from './utils/types';
 
 export const Button = ({
   label,
+  icon,
   disable = false,
   loading = false,
   outlined = false,
-  align,
-  bgColor = theme.color.primary,
+  center = false,
+  bgColor = theme.color.black,
   borderless = false,
-  color = theme.color.white,
+  fullWidth = false,
   ...rest
 }: IButton) => (
-  <Background align={align}>
+  <Background center={center}>
     <ContainerButton
       bgColor={bgColor}
       loading={+loading}
       disable={disable}
       outlined={outlined}
       borderless={borderless}
-      color={color}
+      fullWidth={fullWidth}
     >
       <button {...rest} disabled={disable || loading}>
-        {loading ? <SpinnerContent /> : <p className="p2">{label}</p>}
+        {loading ? (
+          <SpinnerContent />
+        ) : (
+          <>
+            <p className="p2">{label}</p>
+            {icon && <img src={icon} alt="" />}
+          </>
+        )}
       </button>
     </ContainerButton>
   </Background>
