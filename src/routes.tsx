@@ -3,6 +3,8 @@ import { Login } from './screens/Authentication/Login';
 
 import { AuthProvider } from './hook/AuthProvider';
 import { Dashboard } from './screens/Dashboard';
+import { Navbar } from './components/Navbar';
+import { RequireAuth } from './hook/RequireAuth';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -10,7 +12,16 @@ const AppRoutes = () => (
       <Routes>
         <Route path="/login" element={<Login />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <Navbar />
+            </RequireAuth>
+          }
+        >
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
 
         <Route path="*" element={<Login />} />
       </Routes>

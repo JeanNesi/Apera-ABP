@@ -2,17 +2,16 @@
   "name": "apera",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "tsc && vite build",
-    "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
   "dependencies": {
     "apexcharts": "^3.40.0",
     "axios": "^1.4.0",
     "formik": "^2.2.9",
+    "framer-motion": "^10.12.16",
     "prettier": "^2.8.8",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.0",
@@ -21,6 +20,7 @@
     "react-router-dom": "^6.11.1",
     "react-toastify": "^9.1.2",
     "styled-components": "^6.0.0-rc.1",
+    "uuidv4": "^6.2.13",
     "vite-plugin-checker": "^0.6.0",
     "yup": "^1.1.1"
   },

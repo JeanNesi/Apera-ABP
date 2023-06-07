@@ -18,14 +18,14 @@ export const Button = ({
   fullWidth = false,
   ...rest
 }: IButton) => (
-  <Background center={center}>
+  <Background $center={center}>
     <ContainerButton
-      bgColor={bgColor}
-      loading={+loading}
-      disable={disable}
-      outlined={outlined}
-      borderless={borderless}
-      fullWidth={fullWidth}
+      $bgColor={bgColor}
+      $loading={+loading}
+      $disable={disable}
+      $outlined={outlined}
+      $borderless={borderless}
+      $fullWidth={fullWidth}
     >
       <button {...rest} disabled={disable || loading}>
         {loading ? (

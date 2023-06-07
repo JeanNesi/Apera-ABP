@@ -1,29 +1,45 @@
 /* eslint-disable no-console */
-// LIBS
-import { useState } from 'react';
+
+import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
-// COMPONENTS
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 
-// STYLES
 import * as Style from './styles';
 
 import { theme } from '../../../styles/theme';
 import { icons } from '../../../assets/icons';
 import { schema } from './utils/functions';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { v4 as uuid } from 'uuid';
 
 export const Login = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   return (
     <Style.Background>
       <Formik
         validationSchema={schema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={async () => {
+        onSubmit={async (data) => {
           setOnQuery(true);
+          setTimeout(() => {
+            console.log('teste');
+            if (data.email === 'jean@gmail.com' && data.password === 'teste123') {
+              localStorage.setItem('authToken', uuid());
+              navigate('/dashboard');
+            } else {
+              setOnQuery(false);
+              toast.error('E-mail ou senha inválidos!');
+            }
+          }, 1500);
         }}
       >
         {({ errors, values, touched }) => (

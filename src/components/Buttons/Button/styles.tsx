@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
-export const Background = styled.div<{ center: boolean }>`
+export const Background = styled.div<{ $center: boolean }>`
   width: fit-content;
-  ${({ center }) => center && `width: 100%; display: flex; justify-content: center;`}
+  ${({ $center }) => $center && `width: 100%; display: flex; justify-content: center;`}
   height: fit-content;
 `;
 
@@ -30,18 +30,18 @@ export const SpinnerContent = styled.div`
 `;
 
 export const ContainerButton = styled.div<{
-  disable: boolean;
-  loading: number;
-  outlined: boolean;
-  bgColor: string;
-  borderless: boolean;
-  fullWidth: boolean;
+  $disable: boolean;
+  $loading: number;
+  $outlined: boolean;
+  $bgColor: string;
+  $borderless: boolean;
+  $fullWidth: boolean;
 }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: ${({ fullWidth }) => (fullWidth ? '100%' : 'fit-content')};
+  width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'fit-content')};
 
   > button {
     transition: 0.5s;
@@ -58,19 +58,19 @@ export const ContainerButton = styled.div<{
 
     :hover {
       opacity: 0.7;
-      ${({ outlined, bgColor }) => outlined && `background-color: ${`${bgColor}26`};`}
+      ${({ $outlined, $bgColor }) => $outlined && `background-color: ${`${$bgColor}26`};`}
     }
 
-    ${({ bgColor }) => bgColor && `  background-color: ${bgColor};`}
+    ${({ $bgColor }) => $bgColor && `  background-color: ${$bgColor};`}
 
-    ${({ outlined, bgColor }) =>
-      outlined &&
-      `outline: 2px solid ${bgColor}; outline-offset: -2px;  background-color: transparent; color:${bgColor};`}
+    ${({ $outlined, $bgColor }) =>
+      $outlined &&
+      `outline: 2px solid ${$bgColor}; outline-offset: -2px;  background-color: transparent; color:${$bgColor};`}
 
-    ${({ disable }) => disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
+    ${({ $disable }) => $disable && 'opacity: 0.4; :hover {opacity: 0.4;} cursor: not-allowed; '}
 
-    ${({ borderless }) =>
-      borderless &&
+    ${({ $borderless }) =>
+      $borderless &&
       `
       background-color: transparent;
       border: none;
@@ -79,8 +79,8 @@ export const ContainerButton = styled.div<{
       padding: 0;
     `}
 
-    ${({ loading, fullWidth }) =>
-      loading && !fullWidth
+    ${({ $loading, $fullWidth }) =>
+      $loading && !$fullWidth
         ? `border-radius: 100%; padding: ${theme.size.xsm}; opacity: 1; pointer-events: none;`
         : 'height: 40px'}
   }

@@ -21,14 +21,14 @@ export const IconButton = ({
 }: IIconButton) => (
   <ContainerButton
     style={{ pointerEvents: disabled ? 'none' : 'auto' }}
-    hideLabelOnMedia={hideLabelOnMedia}
-    labelPos={labelPos}
-    selected={selected}
-    opacity={opacity}
-    gap={gap}
-    color={color}
-    fontWeight={fontWeight}
-    disable={disabled}
+    $hideLabelOnMedia={hideLabelOnMedia}
+    $labelPos={labelPos}
+    $selected={selected}
+    $opacity={opacity}
+    $gap={gap}
+    $color={color}
+    $fontWeight={fontWeight}
+    $disable={disabled}
     onClick={() => {
       onClick();
     }}
