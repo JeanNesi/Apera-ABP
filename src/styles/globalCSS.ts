@@ -201,7 +201,7 @@ export default createGlobalStyle`
     font-style: normal;
     outline: none;
     width: 100%;
-    background-color: ${theme.color.white};
+    background-color: transparent;
     border: 1px solid ${theme.color.gray4};
     height: 40px;
     border-radius: ${theme.size.xxsm};
@@ -210,6 +210,7 @@ export default createGlobalStyle`
     background-repeat: no-repeat, repeat;
     background-position: right ${theme.size.sm} top 50%, 0 0;
     background-size: 16px;
+    color: ${theme.color.gray2};
   }
 
 
@@ -257,6 +258,19 @@ export default createGlobalStyle`
     } */
   }
 
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track-piece  {
+  background-color: ${theme.color.primary};
+
+  }
+  ::-webkit-scrollbar-thumb:vertical {
+
+    background-color: ${theme.color.gray4};
+    border-radius: 8px;
+  }
+
 
 ::-webkit-scrollbar {
   @media (max-width: 900px) {
@@ -264,14 +278,5 @@ export default createGlobalStyle`
   }
 }
 
-/* ::-webkit-scrollbar-track {
-  background: ${theme.color.gray5};
-}
-::-webkit-scrollbar-thumb {
-  background: ${theme.color.primary};
-  border-radius: 10px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: ${theme.color.primary};
-} */
+
 `;

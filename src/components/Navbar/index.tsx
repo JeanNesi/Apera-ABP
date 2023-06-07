@@ -5,6 +5,7 @@ import { IconButton } from '../Buttons/IconButton';
 import { icons } from '../../assets/icons';
 import { AuthContext } from '../../hook/AuthContext';
 import { Sidebar } from '../Sidebar';
+import { Search } from '../Search';
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ export const Navbar = () => {
           </Style.LeftSide>
 
           <Style.RightSide>
-            <IconButton icon={icons.search} onClick={() => ''} />
+            <Search />
             <img src={user?.profilePicture} alt="" />
           </Style.RightSide>
         </Style.NavbarContent>

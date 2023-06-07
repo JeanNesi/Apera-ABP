@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { theme } from '../../../styles/theme';
 
-export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string }>`
+export const CheckboxWrapper = styled.div<{ $disable: boolean; $labelColor: string }>`
   display: flex;
   align-items: flex-start;
   gap: ${theme.size.xxsm};
@@ -13,8 +13,8 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
     accent-color: ${theme.color.primary};
   }
 
-  ${({ disable }) =>
-    !disable &&
+  ${({ $disable }) =>
+    !$disable &&
     css`
       > input {
         cursor: pointer;
@@ -32,16 +32,15 @@ export const CheckboxWrapper = styled.div<{ disable: boolean; labelColor: string
   > label {
     font-size: 14px;
     line-height: 16px;
-    color: ${({ labelColor }) => labelColor};
+    color: ${({ $labelColor }) => $labelColor};
   }
 `;
 
 export const InputContainer = styled.div<{
-  error: boolean;
-  passwordPlaceholder?: boolean;
+  $error: boolean;
 }>`
-  ${({ error }) =>
-    error &&
+  ${({ $error }) =>
+    $error &&
     `
    > input {
     border-color: ${theme.color.danger} !important;
@@ -51,9 +50,9 @@ export const InputContainer = styled.div<{
  `}
 `;
 
-export const ErrorMessage = styled.div<{ errorColor: string }>`
+export const ErrorMessage = styled.div<{ $errorColor: string }>`
   display: flex;
-  color: ${({ errorColor }) => errorColor};
+  color: ${({ $errorColor }) => $errorColor};
 
   > p {
     animation: scale-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

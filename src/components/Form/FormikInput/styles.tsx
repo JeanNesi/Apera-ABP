@@ -2,20 +2,20 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const InputContainer = styled.div<{
-  labelcolor: string;
-  error?: boolean;
-  passwordPlaceholder?: boolean;
+  $labelcolor: string;
+  $error?: boolean;
+  $passwordPlaceholder?: boolean;
 }>`
   display: flex;
   flex-direction: column;
   > p {
-    color: ${({ labelcolor }) => labelcolor};
+    color: ${({ $labelcolor }) => $labelcolor};
     margin-bottom: ${theme.size.xxsm};
   }
   width: 100%;
 
-  ${({ error }) =>
-    error &&
+  ${({ $error }) =>
+    $error &&
     `
    > input {
     border-color: ${theme.color.danger} !important;
@@ -25,9 +25,9 @@ export const InputContainer = styled.div<{
  `}
 `;
 
-export const ErrorMessage = styled.div<{ errorcolor: string }>`
+export const ErrorMessage = styled.div<{ $errorcolor: string }>`
   display: flex;
-  color: ${({ errorcolor }) => errorcolor};
+  color: ${({ $errorcolor }) => $errorcolor};
 
   > p {
     animation: scale-in-left 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;

@@ -6,6 +6,7 @@ import search from './search.svg';
 import home from './home.svg';
 import wallet from './wallet.svg';
 import gear from './gear.svg';
+import notFoundImage from './notFoundImage.svg';
 
 export const icons = {
   downArrow,
@@ -16,4 +17,5 @@ export const icons = {
   home,
   wallet,
   gear,
+  notFoundImage,
 };

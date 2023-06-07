@@ -20,7 +20,7 @@ const AppRoutes = () => (
             </RequireAuth>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/:stockName" element={<Dashboard />} />
         </Route>
 
         <Route path="*" element={<Login />} />

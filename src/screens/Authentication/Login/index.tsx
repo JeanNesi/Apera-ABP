@@ -31,10 +31,9 @@ export const Login = () => {
         onSubmit={async (data) => {
           setOnQuery(true);
           setTimeout(() => {
-            console.log('teste');
-            if (data.email === 'jean@gmail.com' && data.password === 'teste123') {
+            if (data.email === 'lucas@gmail.com' && data.password === '123') {
               localStorage.setItem('authToken', uuid());
-              navigate('/dashboard');
+              navigate('/dashboard/PETR4');
             } else {
               setOnQuery(false);
               toast.error('E-mail ou senha inválidos!');

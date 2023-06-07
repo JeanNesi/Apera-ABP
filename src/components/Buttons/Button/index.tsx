@@ -1,10 +1,20 @@
 /* eslint-disable react/button-has-type */
-// COMPONENTS
+
+import { ButtonHTMLAttributes } from 'react';
 import { theme } from '../../../styles/theme';
 import { Background, ContainerButton, SpinnerContent } from './styles';
 
-// TYPES
-import { IButton } from './utils/types';
+interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
+  label: string;
+  icon?: string;
+  bgColor?: string;
+  disable?: boolean;
+  outlined?: boolean;
+  loading?: boolean;
+  center?: boolean;
+  borderless?: boolean;
+  fullWidth?: boolean;
+}
 
 export const Button = ({
   label,

@@ -17,7 +17,7 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
     {
       icon: icons.home,
       label: 'Home',
-      url: '/dashboard',
+      url: '/home',
     },
     {
       icon: icons.wallet,

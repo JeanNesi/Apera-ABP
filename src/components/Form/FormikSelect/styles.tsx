@@ -2,8 +2,8 @@ import styled from 'styled-components';
 import { theme } from '../../../styles/theme';
 
 export const SelectContainer = styled.div<{
-  error: boolean;
-  selectPlaceholderValue?: string;
+  $error: boolean;
+  $selectPlaceholderValue?: string;
 }>`
   display: flex;
   flex-direction: column;
@@ -13,12 +13,12 @@ export const SelectContainer = styled.div<{
   width: 100%;
   position: relative;
 
-  ${({ selectPlaceholderValue }) =>
-    selectPlaceholderValue === ''
+  ${({ $selectPlaceholderValue }) =>
+    $selectPlaceholderValue === ''
       ? `
       > select {
         border-color: ${theme.color.gray2};
-        color: #757575
+        color: #fffbfb
       }
       `
       : `
@@ -26,8 +26,8 @@ export const SelectContainer = styled.div<{
           border-color: ${theme.color.gray4};
       }`}
 
-  ${({ error }) =>
-    error &&
+  ${({ $error }) =>
+    $error &&
     `
    > select {
     border-color: ${theme.color.danger} !important;
