@@ -52,11 +52,11 @@ export const selectStyles: StylesConfig = {
       display: 'none',
     },
   }),
-  menu: (styles) => ({ ...styles, background: theme.color.primary, margin: '0' }),
+  menu: (styles) => ({ ...styles, background: theme.color.primary, margin: '0', opacity: '1' }),
   option: (styles, state) => ({
     ...styles,
     background: state.isSelected ? theme.color.dark50 : theme.color.primary,
-    opacity: state.isDisabled ? '0.5' : '1',
+    opacity: state.isDisabled ? '0.8' : '1',
     color: theme.color.gray2,
     cursor: 'pointer',
     fontSize: '14px',

@@ -54,3 +54,9 @@ export const AppContent = styled.main`
     padding: ${theme.size.sm};
   }
 `;
+
+export const SearchContainer = styled.div`
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;

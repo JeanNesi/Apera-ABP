@@ -6,6 +6,10 @@ import { icons } from '../../assets/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+interface ISearch {
+  iconPosition?: 'left' | 'right';
+}
+
 interface IStocks {
   stock: string;
   name: string;
@@ -17,7 +21,7 @@ interface IStocks {
   sector: string;
 }
 
-export const Search = () => {
+export const Search = ({ iconPosition = 'right' }: ISearch) => {
   const navigate = useNavigate();
   const [isOpenSearch, setIsOpenSearch] = useState(false);
 
@@ -34,7 +38,7 @@ export const Search = () => {
   }
 
   return (
-    <Style.SearchContainer>
+    <Style.SearchContainer $iconPosition={iconPosition}>
       {isOpenSearch && (
         <ReactAsyncSelect
           loadOptions={requestStocks}

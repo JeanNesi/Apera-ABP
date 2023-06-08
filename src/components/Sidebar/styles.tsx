@@ -62,3 +62,20 @@ export const SidebarOption = styled.div<{ $isSelected: boolean }>`
     height: 16px;
   }
 `;
+
+export const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  height: 56px;
+  gap: ${theme.size.lg};
+  padding: 0 ${theme.size.lg};
+  opacity: 0.8;
+  color: ${theme.color.gray1};
+  font-size: 14px;
+  position: relative;
+  z-index: 15;
+
+  @media (min-width: 900px) {
+    display: none;
+  }
+`;

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { icons } from '../../assets/icons';
 import * as Style from './styles';
+import { Search } from '../Search';
 
 interface ISidebar {
   isOpen: boolean;
@@ -33,6 +34,9 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
 
   return (
     <Style.SidebarContainer $isOpen={isOpen}>
+      <Style.SearchContainer>
+        <Search iconPosition="left" />
+      </Style.SearchContainer>
       <Style.SidebarOptionsContainer>
         {sidebarContent.map(({ icon, label, url }) => (
           <Link to={url} key={url}>
