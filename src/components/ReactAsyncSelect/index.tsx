@@ -67,7 +67,7 @@ const ReactAsyncSelect: React.FC<Props> = ({
         cacheOptions
         value={value}
         styles={selectStyles}
-        placeholder={placeholder ?? 'Selecione'}
+        placeholder={placeholder ?? 'Buscar ação'}
         isDisabled={disabled}
         onChange={(evt) => {
           onChange(evt as OptionsProps);

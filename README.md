@@ -54,3 +54,7 @@ utilizando pelo computador quanto pelo celular.
 - Styled-components
 - Formik
 - Yup
+
+## Api utilizada
+
+- Brapi(https://brapi.dev/)

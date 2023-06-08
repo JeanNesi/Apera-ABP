@@ -7,7 +7,6 @@ import { Slider } from '../../components/Slider';
 import * as Style from './styles';
 import { DotLoading } from '../../components/DotLoading';
 import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { NotFound } from '../../components/NotFound';
 
 interface IHistoricalDataPrice {
@@ -81,7 +80,6 @@ export const Dashboard = () => {
         setLoading(false);
       })
       .catch(() => {
-        toast.error('Ação não encontrada');
         setLoading(false);
       });
   }
@@ -193,7 +191,12 @@ export const Dashboard = () => {
         </>
       )}
 
-      {!loading && !stockData && <NotFound />}
+      {!loading && !stockData && (
+        <NotFound
+          title="Ação não encontrada"
+          subtitle="A ação que você requisitou não existe ou ocorreu algum erro"
+        />
+      )}
     </div>
   );
 };
