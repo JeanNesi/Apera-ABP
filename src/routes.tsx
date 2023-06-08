@@ -5,11 +5,13 @@ import { AuthProvider } from './hook/AuthProvider';
 import { Dashboard } from './screens/Dashboard';
 import { Navbar } from './components/Navbar';
 import { RequireAuth } from './hook/RequireAuth';
+import { NotFoundPage } from './screens/NotFoundPage';
 
 const AppRoutes = () => (
   <AuthProvider>
     <BrowserRouter>
       <Routes>
+        <Route path="/*" element={<NotFoundPage />} />
         <Route path="/login" element={<Login />} />
 
         <Route

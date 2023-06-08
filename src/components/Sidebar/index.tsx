@@ -27,7 +27,7 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
     },
     {
       icon: icons.gear,
-      label: 'Rondas',
+      label: 'Configurações',
       url: '/patrols',
     },
   ];
