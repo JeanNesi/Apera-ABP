@@ -32,7 +32,9 @@ export const Navbar = () => {
           </Style.LeftSide>
 
           <Style.RightSide>
-            <Search />
+            <Style.SearchContainer>
+              <Search />
+            </Style.SearchContainer>
             <img src={user?.profilePicture} alt="" />
           </Style.RightSide>
         </Style.NavbarContent>
