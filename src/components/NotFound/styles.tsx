@@ -8,7 +8,7 @@ export const ContainerNotFound = styled.div`
   flex-direction: column;
   gap: ${theme.size.md};
 
-  h3 {
+  h2 {
     color: ${theme.color.success};
   }
 

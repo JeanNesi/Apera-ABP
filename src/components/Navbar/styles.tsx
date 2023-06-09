@@ -43,12 +43,10 @@ export const RightSide = styled.div`
 
 export const AppContent = styled.main`
   width: 100%;
-  height: 100dvh;
-  touch-action: pan-y;
   margin: 0 auto;
-  overflow: auto;
+
   max-width: 1196px;
-  padding: ${theme.size.sm} ${theme.size.md};
+  padding: ${theme.size.xlg} ${theme.size.md};
 
   @media (max-width: 900px) {
     padding: ${theme.size.sm};

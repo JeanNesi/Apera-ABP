@@ -7,6 +7,9 @@ import home from './home.svg';
 import wallet from './wallet.svg';
 import gear from './gear.svg';
 import notFoundImage from './notFoundImage.svg';
+import arrow from './arrow.svg';
+import downValue from './downValue.svg';
+import upValue from './upValue.svg';
 
 export const icons = {
   downArrow,
@@ -18,4 +21,7 @@ export const icons = {
   wallet,
   gear,
   notFoundImage,
+  arrow,
+  upValue,
+  downValue,
 };

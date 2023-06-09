@@ -13,7 +13,7 @@ export const Slider = ({ children }: ISlider) => {
   useEffect(() => {
     if (sliderRef.current)
       setWidth(sliderRef.current?.scrollWidth - sliderRef.current?.offsetWidth);
-  }, []);
+  }, [sliderRef.current]);
 
   return (
     <Style.SliderContainer>

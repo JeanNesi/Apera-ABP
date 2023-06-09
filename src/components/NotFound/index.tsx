@@ -13,7 +13,7 @@ export const NotFound = ({
   return (
     <Style.ContainerNotFound>
       <img src={icons.notFoundImage} alt="" />
-      <h3>{title}</h3>
+      <h2>{title}</h2>
       <h6>{subtitle}</h6>
     </Style.ContainerNotFound>
   );

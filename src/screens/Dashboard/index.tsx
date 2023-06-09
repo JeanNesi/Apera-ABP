@@ -8,6 +8,10 @@ import * as Style from './styles';
 import { DotLoading } from '../../components/DotLoading';
 import { useParams } from 'react-router-dom';
 import { NotFound } from '../../components/NotFound';
+import { toast } from 'react-toastify';
+import { StockCard } from '../../components/StockCard';
+import { formatCurrencyBRL, numericScaleIdentifier } from '../../utils/functions';
+import { icons } from '../../assets/icons';
 
 interface IHistoricalDataPrice {
   date: number;
@@ -54,16 +58,31 @@ interface IStockData {
   logourl: string;
 }
 
+interface IStocks {
+  stock: string;
+  name: string;
+  close: number;
+  change: number;
+  volume: number;
+  market_cap: number;
+  logo: string;
+  sector: string;
+}
+
 export const Dashboard = () => {
+  const { stockName } = useParams<{ stockName: string }>();
+
   const [loading, setLoading] = useState(true);
+
   const [stockSeries, setStockSeries] = useState<number[][]>([]);
   const [stockData, setStockData] = useState<IStockData>();
+  const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [lastUpdate, setLastUpdate] = useState('');
-  const { stockName } = useParams<{ stockName: string }>();
 
   async function requestStockData() {
     setLoading(true);
     setStockSeries([]);
+
     axios
       .get(`https://brapi.dev/api/quote/${stockName}?range=5y&interval=1mo&fundamental=true`)
       .then(({ data }) => {
@@ -84,7 +103,19 @@ export const Dashboard = () => {
       });
   }
 
+  async function requestStocks() {
+    await axios
+      .get(`https://brapi.dev/api/quote/list?limit=20`)
+      .then(({ data }) => {
+        setStocksList(data.stocks.reverse());
+      })
+      .catch(() => {
+        toast.error('Ops! Estamos com problemas!');
+      });
+  }
+
   useEffect(() => {
+    requestStocks();
     requestStockData();
   }, [stockName]);
 
@@ -179,14 +210,49 @@ export const Dashboard = () => {
             </Style.StockDetailsRightSide>
           </Style.StockDetailsContainer>
 
+          <Style.StockValuesContainer>
+            <Style.StockValuesContent>
+              <p className="p2">Preço</p>
+              <h3>{formatCurrencyBRL(stockData.regularMarketPrice)}</h3>
+            </Style.StockValuesContent>
+
+            <Style.StockValuesContent>
+              <p className="p2">Variação (dia)</p>
+              <div>
+                <h3>
+                  {formatCurrencyBRL(stockData.regularMarketChange)} (
+                  {stockData.regularMarketChangePercent.toFixed(2)}%)
+                </h3>
+                {stockData.regularMarketChange < 0 ? (
+                  <img src={icons.downValue} alt="" />
+                ) : (
+                  <img src={icons.upValue} alt="" />
+                )}
+              </div>
+            </Style.StockValuesContent>
+
+            <Style.StockValuesContent>
+              <p className="p2">Min. 52 semanas</p>
+              <h3>{formatCurrencyBRL(stockData.fiftyTwoWeekLow)}</h3>
+            </Style.StockValuesContent>
+
+            <Style.StockValuesContent>
+              <p className="p2">Máx. 52 semanas</p>
+              <h3>{formatCurrencyBRL(stockData.fiftyTwoWeekHigh)}</h3>
+            </Style.StockValuesContent>
+
+            <Style.StockValuesContent>
+              <p className="p2">Capitalização de mercado</p>
+              <h3>{numericScaleIdentifier(stockData.marketCap)}</h3>
+            </Style.StockValuesContent>
+          </Style.StockValuesContainer>
+
           <ReactApexChart options={options} series={series} type="area" height={350} />
+
           <Slider>
-            <Style.StockContainer />
-            <Style.StockContainer />
-            <Style.StockContainer />
-            <Style.StockContainer />
-            <Style.StockContainer />
-            <Style.StockContainer />
+            {stocksList.map((element) => (
+              <StockCard stockInfos={element} key={element.stock} />
+            ))}
           </Slider>
         </>
       )}
