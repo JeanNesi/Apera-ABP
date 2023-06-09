@@ -4,7 +4,7 @@ import { theme } from '../../styles/theme';
 export const SliderContainer = styled.div`
   .slider {
     cursor: grab;
-    overflow-x: hidden;
+    overflow: hidden;
     padding: 8px 8px;
   }
 

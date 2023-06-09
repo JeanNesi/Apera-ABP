@@ -39,11 +39,32 @@ export const StockDetailsRightSide = styled.div`
   }
 `;
 
-export const StockContainer = styled.div`
+export const StockValuesContainer = styled.div`
   display: flex;
-  border-radius: ${theme.size.xxsm};
-  box-shadow: 2px 2px 12px 2px rgba(0, 0, 0, 0.15);
-  min-width: 248px;
-  min-height: 135px;
-  pointer-events: none;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: ${theme.size.sm};
+  margin: ${theme.size.lg} 0;
+
+  @media (max-width: 568px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`;
+
+export const StockValuesContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: ${theme.size.sm};
+
+    img {
+      width: 32px;
+    }
+  }
 `;

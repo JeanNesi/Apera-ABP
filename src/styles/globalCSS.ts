@@ -41,9 +41,9 @@ export default createGlobalStyle`
 
   h3 {
     font-style: normal;
-    font-weight: 700;
-    font-size: 32px;
-    line-height: 39px;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
   }
 
   h4 {
@@ -82,7 +82,7 @@ export default createGlobalStyle`
   .p3{
     font-style: normal;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 18px;
   }
   .p4{
