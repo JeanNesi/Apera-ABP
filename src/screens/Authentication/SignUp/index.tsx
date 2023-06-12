@@ -98,6 +98,7 @@ export const SignUp = () => {
                   bgColor={theme.color.success}
                   outlined
                   spinnerColor={theme.color.success}
+                  onClick={() => navigate('/login')}
                 />
               </Form>
             </Style.LoginContainer>

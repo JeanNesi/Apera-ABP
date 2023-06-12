@@ -33,7 +33,7 @@ export const Login = () => {
           setTimeout(() => {
             if (data.email === 'lucas@gmail.com' && data.password === '123') {
               localStorage.setItem('authToken', uuid());
-              navigate('/dashboard/PETR4');
+              navigate('/dashboard/TAEE11');
             } else {
               setOnQuery(false);
               toast.error('E-mail ou senha inválidos!');
@@ -89,6 +89,7 @@ export const Login = () => {
                   color={theme.color.primary}
                   bgColor={theme.color.success}
                   outlined
+                  onClick={() => navigate('/signup')}
                 />
               </Style.RegisterContainer>
             </Style.LoginContainer>
