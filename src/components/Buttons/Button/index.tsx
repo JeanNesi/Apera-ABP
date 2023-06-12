@@ -7,6 +7,7 @@ import { Background, ContainerButton, SpinnerContent } from './styles';
 interface IButton extends ButtonHTMLAttributes<HTMLButtonElement> {
   label: string;
   icon?: string;
+  spinnerColor?: string;
   bgColor?: string;
   disable?: boolean;
   outlined?: boolean;
@@ -23,6 +24,7 @@ export const Button = ({
   loading = false,
   outlined = false,
   center = false,
+  spinnerColor = theme.color.white,
   bgColor = theme.color.black,
   borderless = false,
   fullWidth = false,
@@ -39,7 +41,7 @@ export const Button = ({
     >
       <button {...rest} disabled={disable || loading}>
         {loading ? (
-          <SpinnerContent />
+          <SpinnerContent $spinnerColor={spinnerColor} />
         ) : (
           <>
             <p className="p2">{label}</p>
