@@ -6,6 +6,7 @@ import { Dashboard } from './screens/Dashboard';
 import { Navbar } from './components/Navbar';
 import { RequireAuth } from './hook/RequireAuth';
 import { NotFoundPage } from './screens/NotFoundPage';
+import { SignUp } from './screens/Authentication/SignUp';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -13,6 +14,7 @@ const AppRoutes = () => (
       <Routes>
         <Route path="/*" element={<NotFoundPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
 
         <Route
           path="/"

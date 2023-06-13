@@ -16,7 +16,7 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 
-  gap: ${theme.size.xsm};
+  gap: ${theme.size.sm};
 
   > h2 {
     margin-bottom: ${theme.size.sm};
@@ -41,34 +41,5 @@ export const LoginContainer = styled.div`
 
   button {
     margin-top: ${theme.size.xsm};
-  }
-`;
-
-export const RegisterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.size.xsm};
-`;
-
-export const RegisterContent = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.size.sm};
-  width: 100%;
-  margin-top: ${theme.size.sm};
-
-  > p {
-    white-space: nowrap;
-    color: ${theme.color.gray2};
-  }
-
-  > hr {
-    width: 100%;
-    height: 1px;
-    border: none;
-    background: ${theme.color.gray2};
   }
 `;

@@ -3,19 +3,19 @@
 import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
-import { Button } from '../../../components/Buttons/Button';
-import { FormikInput } from '../../../components/Form/FormikInput';
+import { Button } from '../../components/Buttons/Button';
+import { FormikInput } from '../../components/Form/FormikInput';
 
 import * as Style from './styles';
 
-import { theme } from '../../../styles/theme';
-import { icons } from '../../../assets/icons';
+import { theme } from '../../styles/theme';
+import { icons } from '../../assets/icons';
 import { schema } from './utils/functions';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { v4 as uuid } from 'uuid';
 
-export const Login = () => {
+export const Settings = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export const Login = () => {
     <Style.Background>
       <Formik
         validationSchema={schema}
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ name: 'Lucas Ferreira', email: 'lucas@gmail.com', password: '123' }}
         onSubmit={async (data) => {
           setOnQuery(true);
           setTimeout(() => {
@@ -47,6 +47,13 @@ export const Login = () => {
               <Form>
                 <Style.InputWrapper>
                   <img src={icons.aperaLogo} alt="" />
+                  <FormikInput
+                    name="name"
+                    label="E-mail"
+                    placeholder="Ex: João Silva"
+                    value={values.name}
+                    error={touched.name && errors.name ? errors.name : null}
+                  />
                   <FormikInput
                     name="email"
                     label="E-mail"

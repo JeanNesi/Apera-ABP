@@ -7,11 +7,11 @@ export const Background = styled.div<{ $center: boolean }>`
   height: fit-content;
 `;
 
-export const SpinnerContent = styled.div`
+export const SpinnerContent = styled.div<{ $spinnerColor?: string }>`
   display: none;
   align-items: center;
   justify-content: center;
-  border: 3px solid ${theme.color.white};
+  border: 3px solid ${({ $spinnerColor }) => $spinnerColor ?? theme.color.white};
   border-top: 3px solid ${theme.color.primary};
   border-radius: 50%;
   width: ${theme.size.sm};
