@@ -12,7 +12,8 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
       setUser({
         id: 'a169a2ca-d569-4542-92b9-02b95ab65c8e',
         name: 'Lucas',
-        profilePicture: 'https://api.dicebear.com/6.x/initials/svg?seed=Lucas Ferreira',
+        profilePicture:
+          'https://api.dicebear.com/6.x/initials/svg?seed=Lucas Ferreira&backgroundColor=4FE24C&textColor=2A2A32',
       });
   }, []);
 
