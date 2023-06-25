@@ -15,7 +15,6 @@ export const NavbarContainer = styled.header`
 
 export const NavbarContent = styled.div`
   display: flex;
-  /* max-width: 1196px; */
   justify-content: space-between;
   width: 100%;
   padding: 0 ${theme.size.lg};
