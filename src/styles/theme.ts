@@ -75,6 +75,7 @@ export const theme = {
     dark25: '#06131f40',
     dark50: '#06131f80',
     dark75: '#06131fbf',
+    dark100: '#06131f',
 
     //light
     light25: '#ffffff40',

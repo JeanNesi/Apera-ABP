@@ -18,6 +18,10 @@ export const InputWrapper = styled.div`
 
   gap: ${theme.size.xsm};
 
+  input {
+    height: 56px;
+  }
+
   > h2 {
     margin-bottom: ${theme.size.sm};
     color: ${theme.color.primary};

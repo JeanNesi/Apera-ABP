@@ -3,16 +3,6 @@ import { icons } from '../../assets/icons';
 import * as Style from './styles';
 import { Search } from '../Search';
 
-interface ISidebar {
-  isOpen: boolean;
-}
-
-interface ISidebarContent {
-  icon: string;
-  label: string;
-  url: string;
-}
-
 export const Sidebar = ({ isOpen }: ISidebar) => {
   const sidebarContent: ISidebarContent[] = [
     {

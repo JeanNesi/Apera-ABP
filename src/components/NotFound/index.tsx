@@ -3,11 +3,6 @@ import { icons } from '../../assets/icons';
 import { Button } from '../Buttons/Button';
 import * as Style from './styles';
 
-interface INotFound {
-  title?: string;
-  subtitle?: string;
-}
-
 export const NotFound = ({
   title = 'Página não encontrada',
   subtitle = 'A página que você requisitou não existe ou ocorreu algum erro',

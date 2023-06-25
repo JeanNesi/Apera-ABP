@@ -5,14 +5,14 @@ import { theme } from '../../styles/theme';
 export const selectStyles: StylesConfig = {
   control: (styles) => ({
     ...styles,
-    backgroundColor: theme.color.dark25,
-    height: '38px',
+    backgroundColor: theme.color.primary,
+    height: '36px',
     padding: '0',
     minWidth: '200px',
-    border: `none`,
+    border: `1px solid ${theme.color.gray4}`,
     boxShadow: 'none',
     '&:hover': {
-      borderColor: theme.color.gray3,
+      borderColor: theme.color.gray4,
     },
     cursor: 'pointer',
   }),
@@ -26,6 +26,7 @@ export const selectStyles: StylesConfig = {
   input: (styles) => ({
     ...styles,
     margin: '0px',
+    height: '36px',
     fontSize: '14px',
     fontWeight: 400,
     padding: '0',
@@ -68,6 +69,7 @@ export const selectStyles: StylesConfig = {
   indicatorSeparator: (styles) => ({ ...styles, display: 'none' }),
   dropdownIndicator: (styles, state) => ({
     ...styles,
+    padding: ' 0 12px',
     rotate: state.selectProps.menuIsOpen ? '180deg' : '0',
     transition: '0.2s',
   }),

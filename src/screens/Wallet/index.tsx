@@ -1,16 +1,24 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Table, TableContent } from '../../components/Table';
 import { Api } from '../../services/api';
-import { StockCell } from './styles';
 import { toast } from 'react-toastify';
 import { applyMask } from '../../utils/functions';
 import { BrApi } from '../../services/brApi';
 import { IStockData, IStocksWalletList } from './types';
 import { DotLoading } from '../../components/DotLoading';
+import { AuthContext } from '../../context/AuthContext';
+import { IconButton } from '../../components/Buttons/IconButton';
+import { icons } from '../../assets/icons';
+import { theme } from '../../styles/theme';
+import * as Style from './styles';
+import { ModalAddNewStock } from './utils/ModalAddNewStock';
 
 export const Wallet = () => {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [stocksWalletList, setStocksWalletList] = useState<IStocksWalletList[]>([]);
+
+  const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
 
   async function requestUpdatedStockValues(tickers: string) {
     await BrApi.get(`/quote/${tickers}`)
@@ -44,10 +52,15 @@ export const Wallet = () => {
   async function requestWallet() {
     await Api.get(`/wallet`)
       .then((res) => {
-        setStocksWalletList(res.data);
+        const stocks = res.data.filter((element: any) => element.userId === user?.id);
+        setStocksWalletList(stocks);
 
-        const tickers = res.data.map((element: IStocksWalletList) => element.stock).toString();
-        requestUpdatedStockValues(tickers);
+        if (stocks.length) {
+          const tickers = stocks.map((element: IStocksWalletList) => element.stock).toString();
+          requestUpdatedStockValues(tickers);
+        } else {
+          setLoading(false);
+        }
       })
       .catch(() => toast.error('Algo deu errado'));
   }
@@ -57,43 +70,65 @@ export const Wallet = () => {
   }, []);
 
   return (
-    <>
+    <Style.Container>
+      {modalAddNewStockIsOpen && <ModalAddNewStock setModal={setModalAddNewStockIsOpen} />}
+
       {loading && <DotLoading />}
 
       {!loading && (
-        <Table
-          colsHeader={[
-            { label: 'Ativo' },
-            { label: 'Quantidade' },
-            { label: 'Preço médio' },
-            { label: 'Preço atual' },
-            { label: 'Valorização' },
-            { label: 'Saldo' },
-          ]}
-        >
-          {stocksWalletList.map((stock) => (
-            <TableContent
-              key={stock.id}
-              onClick={() => ''}
-              colsBody={[
-                {
-                  cell: (
-                    <StockCell>
-                      <img src={stock.stockLogoUrl} alt="" />
-                      <p className="p3">{stock.stock}</p>
-                    </StockCell>
-                  ),
-                },
-                { cell: stock.amount },
-                { cell: applyMask({ mask: 'BRL', value: String(stock.averagePrice) }).value },
-                { cell: stock.currentPrice },
-                { cell: `${stock.appreciation}%` },
-                { cell: stock.balance },
-              ]}
-            />
-          ))}
-        </Table>
+        <IconButton
+          label="Adicionar ativo"
+          icon={icons.plus}
+          onClick={() => setModalAddNewStockIsOpen(true)}
+          className="p3"
+          color={theme.color.success}
+        />
       )}
-    </>
+
+      {!loading && !!stocksWalletList.length && (
+        <>
+          <Table
+            colsHeader={[
+              { label: 'Ativo' },
+              { label: 'Quantidade' },
+              { label: 'Preço médio' },
+              { label: 'Preço atual' },
+              { label: 'Valorização' },
+              { label: 'Saldo' },
+            ]}
+          >
+            {stocksWalletList.map((stock) => (
+              <TableContent
+                key={stock.id}
+                onClick={() => ''}
+                colsBody={[
+                  {
+                    cell: (
+                      <Style.StockCell>
+                        <img src={stock.stockLogoUrl} alt="" />
+                        <p className="p3">{stock.stock}</p>
+                      </Style.StockCell>
+                    ),
+                  },
+                  { cell: stock.amount },
+                  { cell: applyMask({ mask: 'BRL', value: String(stock.averagePrice) }).value },
+                  { cell: stock.currentPrice },
+                  { cell: `${stock.appreciation}%` },
+                  { cell: stock.balance },
+                ]}
+              />
+            ))}
+          </Table>
+        </>
+      )}
+
+      {!loading && !stocksWalletList.length && (
+        <Style.NoResultsContainer>
+          <img src={icons.finance} alt="" />
+          <h5>Sua carteira está vazia!</h5>
+          <p className="p2">Adicione um ativo para visualizar.</p>
+        </Style.NoResultsContainer>
+      )}
+    </Style.Container>
   );
 };

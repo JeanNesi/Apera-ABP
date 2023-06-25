@@ -2,23 +2,7 @@ import React from 'react';
 import { components, OptionProps, SingleValueProps, NoticeProps } from 'react-select';
 import { OptionContainer, ReactSelectContainer, selectStyles } from './styles';
 import AsyncSelect from 'react-select/async';
-
-interface OptionsProps {
-  value: string;
-  label: string;
-  icon?: string;
-}
-
-interface Props {
-  loadOptions: () => Promise<OptionsProps[]>;
-
-  label?: string;
-  placeholder?: string;
-  noOptionsMessage?: string;
-  value?: OptionsProps | undefined;
-  onChange: (evt: OptionsProps) => void;
-  disabled?: boolean;
-}
+import { OptionsProps, Props } from './types';
 
 const ReactAsyncSelect: React.FC<Props> = ({
   loadOptions,
@@ -28,6 +12,7 @@ const ReactAsyncSelect: React.FC<Props> = ({
   onChange,
   value,
   disabled,
+  style,
 }) => {
   const Option = (props: OptionProps<any>) => (
     <components.Option {...props}>
@@ -59,14 +44,14 @@ const ReactAsyncSelect: React.FC<Props> = ({
 
   return (
     <ReactSelectContainer>
-      {label && <p className="p2">{label}</p>}
+      {label && <p className="p6">{label}</p>}
 
       <AsyncSelect
         loadOptions={loadOptions}
         defaultOptions
         cacheOptions
         value={value}
-        styles={selectStyles}
+        styles={style ?? selectStyles}
         placeholder={placeholder ?? 'Buscar ação'}
         isDisabled={disabled}
         onChange={(evt) => {

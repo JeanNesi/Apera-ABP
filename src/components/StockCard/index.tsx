@@ -2,19 +2,6 @@ import { motion } from 'framer-motion';
 import * as Style from './styles';
 import { formatCurrencyBRL } from '../../utils/functions';
 
-interface IStockCard {
-  stockInfos: {
-    stock: string;
-    name: string;
-    close: number;
-    change: number;
-    volume: number;
-    market_cap: number;
-    logo: string;
-    sector: string;
-  };
-}
-
 export const StockCard = ({ stockInfos }: IStockCard) => {
   return (
     <motion.div key={stockInfos.stock}>

@@ -2,10 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import * as Style from './styles';
 import { motion } from 'framer-motion';
 
-interface ISlider {
-  children: JSX.Element | JSX.Element[];
-}
-
 export const Slider = ({ children }: ISlider) => {
   const sliderRef = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(0);

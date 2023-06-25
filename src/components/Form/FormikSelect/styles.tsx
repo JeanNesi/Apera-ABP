@@ -8,7 +8,7 @@ export const SelectContainer = styled.div<{
   display: flex;
   flex-direction: column;
   > p {
-    margin-bottom: ${theme.size.xxsm};
+    margin-bottom: 6px;
   }
   width: 100%;
   position: relative;

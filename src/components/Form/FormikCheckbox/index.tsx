@@ -1,16 +1,9 @@
-import { forwardRef, ForwardRefRenderFunction, InputHTMLAttributes } from 'react';
+import { forwardRef, ForwardRefRenderFunction } from 'react';
 import { Field } from 'formik';
 
 import { ErrorMessage, InputContainer, CheckboxWrapper } from './styles';
 import { theme } from '../../../styles/theme';
-
-interface IInput extends InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-  labelColor?: string;
-  errorColor?: string;
-  error?: string | null | any;
-  disable?: boolean;
-}
+import { IInput } from './types';
 
 const FormikCheckboxBase: ForwardRefRenderFunction<HTMLInputElement, IInput> = (
   {

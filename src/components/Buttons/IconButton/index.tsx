@@ -1,29 +1,13 @@
 import { theme } from '../../../styles/theme';
 import { ContainerButton } from './styles';
 
-interface IIconButton {
-  icon: string;
-  gap?: string;
-  color?: string;
-  label?: string;
-  opacity?: string;
-  className?: string;
-  labelPos?: 'left' | 'right' | 'top' | 'bottom';
-  selected?: boolean;
-  onClick: () => void;
-  hideLabelOnMedia?: boolean;
-  fontWeight?: string;
-  size?: string;
-  disabled?: boolean;
-}
-
 export const IconButton = ({
   labelPos = 'left',
   opacity = '0.5',
   label,
   icon,
   gap = theme.size.xxsm,
-  color = theme.color.gray4,
+  color = theme.color.success,
   selected,
   onClick,
   className = 'p2',

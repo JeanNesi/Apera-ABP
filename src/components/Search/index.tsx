@@ -6,21 +6,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BrApi } from '../../services/brApi';
 
-interface ISearch {
-  iconPosition?: 'left' | 'right';
-}
-
-interface IStocks {
-  stock: string;
-  name: string;
-  close: number;
-  change: number;
-  volume: number;
-  market_cap: number;
-  logo: string;
-  sector: string;
-}
-
 export const Search = ({ iconPosition = 'right' }: ISearch) => {
   const navigate = useNavigate();
   const [isOpenSearch, setIsOpenSearch] = useState(false);
@@ -40,6 +25,7 @@ export const Search = ({ iconPosition = 'right' }: ISearch) => {
       {isOpenSearch && (
         <ReactAsyncSelect
           loadOptions={requestStocks}
+          style={Style.selectStyles}
           onChange={(evt) => navigate(`/dashboard/${evt.value}`)}
         />
       )}

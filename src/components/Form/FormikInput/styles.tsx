@@ -10,7 +10,7 @@ export const InputContainer = styled.div<{
   flex-direction: column;
   > p {
     color: ${({ $labelcolor }) => $labelcolor};
-    margin-bottom: ${theme.size.xxsm};
+    margin-bottom: 6px;
   }
   width: 100%;
 
