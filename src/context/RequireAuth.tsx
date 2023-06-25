@@ -13,17 +13,17 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const [loading, setLoading] = useState(true);
 
   async function validateToken() {
-    await Api.get(`/login/${localStorage.getItem('authToken')}/users`)
-      .then(({ data }: { data: IUser[] }) => {
+    await Api.get(`/login/${localStorage.getItem('authToken')}`)
+      .then(({ data }: { data: IUser }) => {
         setLoading(false);
         setUser({
-          id: data[0].id,
-          name: data[0].name,
-          profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${data[0].name}&backgroundColor=4FE24C&textColor=ffffff`,
-          loginId: data[0].loginId,
+          id: data.id,
+          name: data.name,
+          profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
         });
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         navigate('/login');
         toast.error('Token inválido ou expirado!');
       });

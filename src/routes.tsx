@@ -7,7 +7,7 @@ import { Navbar } from './components/Navbar';
 import { RequireAuth } from './context/RequireAuth';
 import { NotFoundPage } from './screens/NotFoundPage';
 import { SignUp } from './screens/Authentication/SignUp';
-import { Wallet } from './screens/Wallet';
+// import { Wallet } from './screens/Wallet';
 import { Home } from './screens/Home';
 
 const AppRoutes = () => (
@@ -28,7 +28,7 @@ const AppRoutes = () => (
         >
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard/:stockName" element={<Dashboard />} />
-          <Route path="/wallet" element={<Wallet />} />
+          {/* <Route path="/wallet" element={<Wallet />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
