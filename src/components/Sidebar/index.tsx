@@ -30,6 +30,11 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
       label: 'Configurações',
       url: '/patrols',
     },
+    {
+      icon: icons.power,
+      label: 'Sair',
+      url: '/login',
+    },
   ];
 
   return (

@@ -10,6 +10,8 @@ import notFoundImage from './notFoundImage.svg';
 import arrow from './arrow.svg';
 import downValue from './downValue.svg';
 import upValue from './upValue.svg';
+import homeImage from './homeImage.svg';
+import power from './power.svg';
 
 export const icons = {
   downArrow,
@@ -24,4 +26,6 @@ export const icons = {
   arrow,
   upValue,
   downValue,
+  homeImage,
+  power,
 };

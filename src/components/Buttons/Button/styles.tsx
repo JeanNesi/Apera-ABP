@@ -43,6 +43,12 @@ export const ContainerButton = styled.div<{
   justify-content: center;
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'fit-content')};
 
+  > :hover {
+    opacity: 0.7;
+    ${({ $outlined, $bgColor, $disable }) =>
+      $outlined && !$disable && `background-color: ${`${$bgColor}26`};`}
+  }
+
   > button {
     transition: 0.5s;
     display: flex;
@@ -54,11 +60,6 @@ export const ContainerButton = styled.div<{
     > img {
       width: 24px;
       height: 24px;
-    }
-
-    :hover {
-      opacity: 0.7;
-      ${({ $outlined, $bgColor }) => $outlined && `background-color: ${`${$bgColor}26`};`}
     }
 
     ${({ $bgColor }) => $bgColor && `  background-color: ${$bgColor};`}

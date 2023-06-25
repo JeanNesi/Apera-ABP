@@ -1,44 +1,61 @@
-/* eslint-disable no-console */
-
 import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 
+import * as yup from 'yup';
 import * as Style from './styles';
 
 import { theme } from '../../../styles/theme';
 import { icons } from '../../../assets/icons';
-import { schema } from './utils/functions';
+
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { v4 as uuid } from 'uuid';
+import { Api } from '../../../services/api';
+import { IFormData, ILoginData } from './type';
 
 export const Login = () => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const schema = yup.object({
+    email: yup.string().email('E-mail inválido!').required('Digite seu e-mail'),
+    password: yup.string().required('Digite sua senha'),
+  });
 
   useEffect(() => {
     localStorage.clear();
   }, []);
+
+  async function requestUserLogin(formData: IFormData) {
+    setOnQuery(true);
+    await Api.get('/login')
+      .then(({ data }: { data: ILoginData[] }) => {
+        const loginAccount = data.find((login) => login.email === formData.email);
+
+        if (loginAccount && loginAccount.password === formData.password) {
+          navigate('/dashboard/PETR4');
+          localStorage.setItem('authToken', loginAccount.id);
+        } else {
+          toast.error('E-mail ou senha incorreto!');
+        }
+
+        setOnQuery(false);
+      })
+      .catch(() => {
+        toast.success('Algo deu errado!');
+        setOnQuery(false);
+      });
+  }
 
   return (
     <Style.Background>
       <Formik
         validationSchema={schema}
         initialValues={{ email: '', password: '' }}
-        onSubmit={async (data) => {
-          setOnQuery(true);
-          setTimeout(() => {
-            if (data.email === 'lucas@gmail.com' && data.password === '123') {
-              localStorage.setItem('authToken', uuid());
-              navigate('/dashboard/TAEE11');
-            } else {
-              setOnQuery(false);
-              toast.error('E-mail ou senha inválidos!');
-            }
-          }, 1500);
+        onSubmit={async (data: IFormData) => {
+          requestUserLogin(data);
         }}
       >
         {({ errors, values, touched }) => (
@@ -84,7 +101,7 @@ export const Login = () => {
                   fullWidth
                   center
                   label="Criar uma conta"
-                  loading={onQuery}
+                  disable={onQuery}
                   type="submit"
                   color={theme.color.primary}
                   bgColor={theme.color.success}
