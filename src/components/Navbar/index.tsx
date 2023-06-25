@@ -1,15 +1,16 @@
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { useContext, useEffect, useState } from 'react';
 import { IconButton } from '../Buttons/IconButton';
 import { icons } from '../../assets/icons';
-import { AuthContext } from '../../hook/AuthContext';
+import { AuthContext } from '../../context/AuthContext';
 import { Sidebar } from '../Sidebar';
 import { Search } from '../Search';
 
 export const Navbar = () => {
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const location = useLocation();
 
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
@@ -17,7 +18,8 @@ export const Navbar = () => {
     if (window.location.href.endsWith('/')) {
       navigate('/login');
     }
-  }, []);
+    setSidebarIsOpen(false);
+  }, [location.pathname]);
 
   return (
     <>

@@ -1,7 +1,6 @@
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 import { theme } from '../../styles/theme';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Slider } from '../../components/Slider';
 import * as Style from './styles';
@@ -12,62 +11,7 @@ import { toast } from 'react-toastify';
 import { StockCard } from '../../components/StockCard';
 import { formatCurrencyBRL, numericScaleIdentifier } from '../../utils/functions';
 import { icons } from '../../assets/icons';
-
-interface IHistoricalDataPrice {
-  date: number;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  volume: number;
-  adjustedClose: number;
-}
-
-interface IStockData {
-  symbol: string;
-  shortName: string;
-  longName: string;
-  currency: string;
-  regularMarketPrice: number;
-  regularMarketDayHigh: number;
-  regularMarketDayLow: number;
-  regularMarketDayRange: string;
-  regularMarketChange: number;
-  regularMarketChangePercent: number;
-  regularMarketTime: string;
-  marketCap: number;
-  regularMarketVolume: number;
-  regularMarketPreviousClose: number;
-  regularMarketOpen: number;
-  averageDailyVolume10Day: number;
-  averageDailyVolume3Month: number;
-  fiftyTwoWeekLowChange: number;
-  fiftyTwoWeekLowChangePercent: number;
-  fiftyTwoWeekRange: string;
-  fiftyTwoWeekHighChange: number;
-  fiftyTwoWeekHighChangePercent: number;
-  fiftyTwoWeekLow: number;
-  fiftyTwoWeekHigh: number;
-  twoHundredDayAverage: number;
-  twoHundredDayAverageChange: number;
-  twoHundredDayAverageChangePercent: number;
-  validRanges: '1d' | '5d' | '1mo' | '3mo' | '6mo' | '1y' | '2y' | '5y' | '10y' | 'ytd' | 'max'[];
-  historicalDataPrice: IHistoricalDataPrice[];
-  priceEarnings: number;
-  earningsPerShare: number;
-  logourl: string;
-}
-
-interface IStocks {
-  stock: string;
-  name: string;
-  close: number;
-  change: number;
-  volume: number;
-  market_cap: number;
-  logo: string;
-  sector: string;
-}
+import { BrApi } from '../../services/brApi';
 
 export const Dashboard = () => {
   const { stockName } = useParams<{ stockName: string }>();
@@ -83,8 +27,7 @@ export const Dashboard = () => {
     setLoading(true);
     setStockSeries([]);
 
-    axios
-      .get(`https://brapi.dev/api/quote/${stockName}?range=5y&interval=1mo&fundamental=true`)
+    BrApi.get(`/quote/${stockName}?range=5y&interval=1mo&fundamental=true`)
       .then(({ data }) => {
         setStockData(data.results[0]);
         setLastUpdate(data.requestedAt);
@@ -104,8 +47,7 @@ export const Dashboard = () => {
   }
 
   async function requestStocks() {
-    await axios
-      .get(`https://brapi.dev/api/quote/list?limit=20`)
+    await BrApi.get(`/quote/list?limit=20`)
       .then(({ data }) => {
         setStocksList(data.stocks.reverse());
       })

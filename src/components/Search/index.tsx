@@ -1,10 +1,10 @@
-import axios from 'axios';
 import ReactAsyncSelect from '../ReactAsyncSelect';
 import * as Style from './styles';
 import { IconButton } from '../Buttons/IconButton';
 import { icons } from '../../assets/icons';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { BrApi } from '../../services/brApi';
 
 interface ISearch {
   iconPosition?: 'left' | 'right';
@@ -27,13 +27,11 @@ export const Search = ({ iconPosition = 'right' }: ISearch) => {
 
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
-    await axios
-      .get(`https://brapi.dev/api/quote/list?search=${search}&limit=10`)
-      .then(({ data }) => {
-        data.stocks.forEach(({ stock, logo }: IStocks) => {
-          options.push({ label: stock, value: stock, icon: logo });
-        });
+    await BrApi.get(`/quote/list?search=${search}&limit=10`).then(({ data }) => {
+      data.stocks.forEach(({ stock, logo }: IStocks) => {
+        options.push({ label: stock, value: stock, icon: logo });
       });
+    });
     return options;
   }
 

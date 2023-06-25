@@ -25,7 +25,7 @@ export const Button = ({
   outlined = false,
   center = false,
   spinnerColor = theme.color.white,
-  bgColor = theme.color.black,
+  bgColor = theme.color.success,
   borderless = false,
   fullWidth = false,
   ...rest

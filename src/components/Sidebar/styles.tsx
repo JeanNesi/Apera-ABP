@@ -3,8 +3,9 @@ import { theme } from '../../styles/theme';
 
 export const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
   width: 0;
-  overflow: hidden;
-  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: calc(100vh - 76px);
   position: fixed;
   z-index: 12;
   box-shadow: 2px 0px 0px 0px rgba(0, 0, 0, 0.15);
@@ -24,6 +25,11 @@ export const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
 export const SidebarOptionsContainer = styled.nav`
   display: flex;
   flex-direction: column;
+  height: 100%;
+
+  a:last-of-type {
+    margin-top: auto;
+  }
 `;
 
 export const SidebarOption = styled.div<{ $isSelected: boolean }>`

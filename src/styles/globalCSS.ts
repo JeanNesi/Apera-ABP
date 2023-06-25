@@ -229,7 +229,7 @@ export default createGlobalStyle`
     border: none;
     cursor: pointer;
     color: ${theme.color.white};
-    background-color: ${theme.color.primary};
+    background-color: ${theme.color.success};
   }
 
   table{

@@ -6,17 +6,50 @@ import { Formik, Form } from 'formik';
 import { Button } from '../../../components/Buttons/Button';
 import { FormikInput } from '../../../components/Form/FormikInput';
 
+import * as yup from 'yup';
 import * as Style from './styles';
 
 import { theme } from '../../../styles/theme';
 import { icons } from '../../../assets/icons';
-import { schema } from './utils/functions';
+
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Api } from '../../../services/api';
 
 export const SignUp = () => {
-  const [onQuery, setOnQuery] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [onQuery, setOnQuery] = useState<boolean>(false);
+
+  const schema = yup.object({
+    name: yup.string().required('Campo obrigatório!'),
+    email: yup.string().email('E-mail inválido!').required('Campo obrigatório!'),
+    password: yup
+      .string()
+      .required('Campo obrigatório!')
+      .min(8, 'Sua senha deve ter no minimo 8 caracteres'),
+    confirmPassword: yup
+      .string()
+      .required('Campo obrigatório!')
+      .oneOf([yup.ref('password')], 'Senhas não conferem!'),
+  });
+
+  async function createUserAccount(data: IFormData) {
+    setOnQuery(true);
+    await Api.post('/login', {
+      name: data.name,
+      email: data.email,
+      password: data.password,
+    })
+      .then(() => {
+        toast.success('Cadastro realizado com sucesso!');
+        navigate('/login');
+        setOnQuery(false);
+      })
+      .catch(() => {
+        toast.success('Algo deu errado!');
+        setOnQuery(false);
+      });
+  }
 
   return (
     <Style.Background>
@@ -24,13 +57,8 @@ export const SignUp = () => {
         validationSchema={schema}
         initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
         validateOnChange={true}
-        onSubmit={async () => {
-          setOnQuery(true);
-          setTimeout(() => {
-            toast.success('Cadastro realizado com sucesso!');
-            navigate('/login');
-            setOnQuery(false);
-          }, 1500);
+        onSubmit={async (data: IFormData) => {
+          createUserAccount(data);
         }}
       >
         {({ errors, values, touched }) => (
@@ -92,7 +120,7 @@ export const SignUp = () => {
                   fullWidth
                   center
                   label="Voltar"
-                  loading={onQuery}
+                  disable={onQuery}
                   type="submit"
                   color={theme.color.primary}
                   bgColor={theme.color.success}
