@@ -24,21 +24,22 @@ export const TableRowHead = styled.tr<{ $bgColor?: string }>`
 
 export const TableRow = styled.tr<{ $bgColor?: string }>`
   ${({ $bgColor }) => $bgColor && `background-color: ${$bgColor};`};
-  :hover {
+  &:hover {
     cursor: pointer;
     ${({ $bgColor }) =>
       $bgColor &&
       css`
-        background-color: ${`${$bgColor}B3`};
+        /* opacity: 0.7; */
+        /* background-color: ${`${$bgColor}B3`}; */
       `};
   }
 `;
 
 export const TableColHeader = styled.th<{ $cssProps: any; $cssOnMedia: any }>`
   color: ${theme.color.gray4};
-  text-align: start;
+  text-align: center;
   white-space: nowrap;
-  padding-inline: ${theme.size.sm};
+  /* padding-inline: ${theme.size.sm}; */
 
   ${({ $cssProps }) => $cssProps}
 
@@ -53,15 +54,16 @@ export const TableColBody = styled.td<{
   cssOnMedia: any;
 }>`
   height: ${theme.size.xxlg};
-  text-align: start;
+  text-align: center;
   padding-inline: ${theme.size.sm};
+  white-space: nowrap;
 
-  :first-of-type {
+  &:first-of-type {
     border-radius: ${theme.size.xxsm} 0px 0px ${theme.size.xxsm};
     padding-left: ${theme.size.sm};
   }
 
-  :last-of-type {
+  &:last-of-type {
     border-radius: 0px ${theme.size.xxsm} ${theme.size.xxsm} 0px;
     min-width: 0px;
     padding-right: ${theme.size.sm};
