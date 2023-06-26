@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
 export const Background = styled.div`
-  min-height: 85vh;
+  height: 68vh;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -71,4 +71,14 @@ export const RegisterContent = styled.div`
     border: none;
     background: ${theme.color.gray2};
   }
+`;
+
+export const ImageContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+`;
+
+export const UserImage = styled.img`
+  border-radius: 50%;
 `;

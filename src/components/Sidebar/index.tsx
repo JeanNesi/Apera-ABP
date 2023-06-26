@@ -18,7 +18,7 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
     {
       icon: icons.gear,
       label: 'Configurações',
-      url: '/patrols',
+      url: '/settings',
     },
     {
       icon: icons.power,
