@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { useContext, useEffect, useState } from 'react';
 import { IconButton } from '../Buttons/IconButton';
@@ -30,14 +30,18 @@ export const Navbar = () => {
               icon={icons.hamburgerMenu}
               onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
             />
-            <img src={icons.aperaLogo} alt="" />
+            <Link to="/home">
+              <img src={icons.aperaLogo} alt="" />
+            </Link>
           </Style.LeftSide>
 
           <Style.RightSide>
             <Style.SearchContainer>
               <Search />
             </Style.SearchContainer>
-            <img src={user?.profilePicture} alt="" />
+            <Link to="/settings">
+              <img src={user?.profilePicture} alt="" onClick={() => navigate('/settings')} />
+            </Link>
           </Style.RightSide>
         </Style.NavbarContent>
       </Style.NavbarContainer>

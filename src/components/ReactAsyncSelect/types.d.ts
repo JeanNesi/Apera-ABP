@@ -16,4 +16,6 @@ interface Props {
   onChange: (evt: OptionsProps) => void;
   disabled?: boolean;
   style?: StylesConfig;
+  error?: string | null;
+  name?: string;
 }

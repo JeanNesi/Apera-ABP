@@ -127,7 +127,10 @@ export const Home = () => {
                 <h3>Ibovespa</h3>
                 <h3>{stockData?.regularMarketPrice.toLocaleString('pt-br')}</h3>
 
-                <p className="p2">+152,23 (0,13%)</p>
+                <p className="p2">
+                  {stockData?.regularMarketChange.toLocaleString('pt-br')} (
+                  {stockData?.regularMarketChangePercent.toFixed(2)})
+                </p>
               </Style.IbovespaInfosContainer>
               <ReactApexChart options={options} series={series} type="area" height={350} />
             </Style.ChartContainer>
