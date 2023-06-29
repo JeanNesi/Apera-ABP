@@ -54,6 +54,11 @@ export const ModalAddNewStock = ({ setModal, stocksWalletList, callback }: IModa
     let averagePrice = 0;
     let amount = 0;
 
+    if (findedStock.amount <= Number(data.amount) && selectedTransactionType === 'sale') {
+      setOnQuery(false);
+      return toast.info('Número de ações inválido');
+    }
+
     if (selectedTransactionType === 'buy') {
       averagePrice =
         (findedStock.averagePrice * findedStock.amount +
@@ -84,6 +89,8 @@ export const ModalAddNewStock = ({ setModal, stocksWalletList, callback }: IModa
         setOnQuery(false);
         toast.error('Algo deu errado');
       });
+
+    return;
   }
 
   async function requestStocks(search?: string) {
