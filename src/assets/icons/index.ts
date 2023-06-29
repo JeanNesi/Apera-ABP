@@ -17,9 +17,11 @@ import finance from './finance.svg';
 import x from './x.svg';
 import upArrow from './upArrow.svg';
 import downArrowGray from './downArrowGray.svg';
+import trash from './trash.svg';
 
 export const icons = {
   downArrow,
+  trash,
   upArrow,
   downArrowGray,
   aperaLogo,

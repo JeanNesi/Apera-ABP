@@ -45,8 +45,8 @@ export const ContainerButton = styled.div<{
 
   > :hover {
     opacity: 0.7;
-    ${({ $outlined, $bgColor, $disable }) =>
-      $outlined && !$disable && `background-color: ${`${$bgColor}26`};`}
+    ${({ $outlined, $bgColor, $disable, $borderless }) =>
+      $outlined && !$disable && !$borderless && `background-color: ${`${$bgColor}26`};`}
   }
 
   > button {

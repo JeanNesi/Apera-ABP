@@ -12,13 +12,16 @@ import { icons } from '../../assets/icons';
 import { theme } from '../../styles/theme';
 import * as Style from './styles';
 import { ModalAddNewStock } from './utils/ModalAddNewStock';
+import { ModalDeleteStock } from './utils/ModalDeleteStock';
 
 export const Wallet = () => {
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [stocksWalletList, setStocksWalletList] = useState<IStocksWalletList[]>([]);
+  const [selectedStockId, setSelectedStockId] = useState('');
 
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
+  const [modalDeletetockIsOpen, setModalDeleteStockIsOpen] = useState(false);
 
   async function requestUpdatedStockValues(tickers: string) {
     await BrApi.get(`/quote/${tickers}`)
@@ -37,6 +40,12 @@ export const Wallet = () => {
               value: String(element.regularMarketPrice * 100 * newState[i].amount),
             }).value;
 
+            console.log(
+              newState[i].averagePrice / element.regularMarketPrice,
+              newState[i].averagePrice,
+              element.regularMarketPrice,
+            );
+
             newState[i].appreciation = Number(
               (100 - newState[i].averagePrice / element.regularMarketPrice).toFixed(2),
             );
@@ -50,6 +59,8 @@ export const Wallet = () => {
   }
 
   async function requestWallet() {
+    setLoading(true);
+
     await Api.get(`/wallet`)
       .then((res) => {
         const stocks = res.data.filter((element: any) => element.userId === user?.id);
@@ -71,9 +82,33 @@ export const Wallet = () => {
 
   return (
     <Style.Container>
-      {modalAddNewStockIsOpen && <ModalAddNewStock setModal={setModalAddNewStockIsOpen} />}
+      {modalAddNewStockIsOpen && (
+        <ModalAddNewStock
+          setModal={setModalAddNewStockIsOpen}
+          stocksWalletList={stocksWalletList}
+          callback={() => {
+            setStocksWalletList([]);
+            requestWallet();
+          }}
+        />
+      )}
 
-      {loading && <DotLoading />}
+      {modalDeletetockIsOpen && (
+        <ModalDeleteStock
+          setModal={setModalDeleteStockIsOpen}
+          stockId={selectedStockId}
+          callback={() => {
+            setStocksWalletList([]);
+            requestWallet();
+          }}
+        />
+      )}
+
+      {loading && (
+        <Style.LoadingContainer>
+          <DotLoading />
+        </Style.LoadingContainer>
+      )}
 
       {!loading && (
         <IconButton
@@ -95,6 +130,7 @@ export const Wallet = () => {
               { label: 'Preço atual' },
               { label: 'Valorização' },
               { label: 'Saldo' },
+              { label: '' },
             ]}
           >
             {stocksWalletList.map((stock) => (
@@ -115,6 +151,17 @@ export const Wallet = () => {
                   { cell: stock.currentPrice },
                   { cell: `${stock.appreciation}%` },
                   { cell: stock.balance },
+                  {
+                    cell: (
+                      <IconButton
+                        icon={icons.trash}
+                        onClick={() => {
+                          setSelectedStockId(stock.id);
+                          setModalDeleteStockIsOpen(true);
+                        }}
+                      />
+                    ),
+                  },
                 ]}
               />
             ))}

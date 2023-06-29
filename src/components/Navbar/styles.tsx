@@ -24,6 +24,13 @@ export const LeftSide = styled.div`
   display: flex;
   align-items: center;
   gap: ${theme.size.md};
+
+  a {
+    > img {
+      height: 36px;
+    }
+  }
+
   > img {
     height: 36px;
   }
@@ -34,8 +41,19 @@ export const RightSide = styled.div`
   align-items: center;
   gap: ${theme.size.md};
 
+  a {
+    width: 36px;
+
+    > img {
+      height: 40px;
+      cursor: pointer;
+      border-radius: 50%;
+    }
+  }
+
   > img {
     height: 40px;
+    cursor: pointer;
     border-radius: 50%;
   }
 `;

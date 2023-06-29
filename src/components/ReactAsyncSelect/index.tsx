@@ -1,6 +1,6 @@
 import React from 'react';
 import { components, OptionProps, SingleValueProps, NoticeProps } from 'react-select';
-import { OptionContainer, ReactSelectContainer, selectStyles } from './styles';
+import { ErrorMessage, OptionContainer, ReactSelectContainer, selectStyles } from './styles';
 import AsyncSelect from 'react-select/async';
 import { OptionsProps, Props } from './types';
 
@@ -13,6 +13,8 @@ const ReactAsyncSelect: React.FC<Props> = ({
   value,
   disabled,
   style,
+  error,
+  name,
 }) => {
   const Option = (props: OptionProps<any>) => (
     <components.Option {...props}>
@@ -50,6 +52,7 @@ const ReactAsyncSelect: React.FC<Props> = ({
         loadOptions={loadOptions}
         defaultOptions
         cacheOptions
+        name={name}
         value={value}
         styles={style ?? selectStyles}
         placeholder={placeholder ?? 'Buscar ação'}
@@ -64,6 +67,7 @@ const ReactAsyncSelect: React.FC<Props> = ({
           LoadingMessage,
         }}
       />
+      <ErrorMessage>{!!error && <p className="p9">{error}</p>}</ErrorMessage>
     </ReactSelectContainer>
   );
 };

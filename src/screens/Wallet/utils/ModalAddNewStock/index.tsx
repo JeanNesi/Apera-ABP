@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Modal } from '../../../../components/Modal';
 import * as Style from './styles';
 import { theme } from '../../../../styles/theme';
@@ -7,12 +7,84 @@ import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Button } from '../../../../components/Buttons/Button';
 import ReactAsyncSelect from '../../../../components/ReactAsyncSelect';
 import { BrApi } from '../../../../services/brApi';
-import { IModalAddNewStock } from './types';
+import { IFormData, IModalAddNewStock } from './types';
 import { applyMask, dateToISOString, unMask } from '../../../../utils/functions';
 
-export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
+import * as yup from 'yup';
+import { Api } from '../../../../services/api';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../../context/AuthContext';
+import { IStocksWalletList } from '../../types';
+
+export const ModalAddNewStock = ({ setModal, stocksWalletList, callback }: IModalAddNewStock) => {
+  const { user } = useContext(AuthContext);
+  const [onQuery, setOnQuery] = useState(false);
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [selectedTransactionType, setSelectedTransactionType] = useState<'buy' | 'sale'>('buy');
+
+  const schema = yup.object({
+    stock: yup.string().required('Selecione uma ação.'),
+    buyDate: yup.string().required('Data é obrigatória.'),
+    amount: yup.string().required('Quantidade é obrigatória.'),
+    value: yup.string().required('Valor é obrigatório.'),
+    otherCosts: yup.string(),
+  });
+
+  async function addStock(data: IFormData) {
+    await Api.post(`/wallet`, {
+      stock: data.stock,
+      stockLogoUrl: stocksList.find((stock) => stock.stock === data.stock)?.logo,
+      amount: Number(data.amount),
+      averagePrice: Number(unMask(data.value)),
+      userId: user?.id,
+    })
+      .then(() => {
+        setOnQuery(false);
+        setModal(false);
+        callback();
+        toast.success('Ativo adicionado com sucesso!');
+      })
+      .catch(() => {
+        toast.error('Algo deu errado');
+        setOnQuery(false);
+      });
+  }
+
+  async function editStock(data: IFormData, findedStock: IStocksWalletList) {
+    let averagePrice = 0;
+    let amount = 0;
+
+    if (selectedTransactionType === 'buy') {
+      averagePrice =
+        (findedStock.averagePrice * findedStock.amount +
+          Number(unMask(data.value)) * Number(data.amount)) /
+        (Number(data.amount) + findedStock.amount);
+
+      amount = findedStock.amount + Number(data.amount);
+    } else {
+      averagePrice =
+        (findedStock.averagePrice * findedStock.amount -
+          Number(unMask(data.value)) * Number(data.amount)) /
+        (Number(data.amount) - findedStock.amount);
+
+      amount = findedStock.amount - Number(data.amount);
+    }
+
+    await Api.put(`/wallet/${findedStock.id}`, {
+      amount,
+      averagePrice: Number(averagePrice.toFixed(0)),
+    })
+      .then(() => {
+        setOnQuery(false);
+        setModal(false);
+        callback();
+        toast.success('Ativo adicionado com sucesso!');
+      })
+      .catch(() => {
+        setOnQuery(false);
+        toast.error('Algo deu errado');
+      });
+  }
 
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
@@ -34,7 +106,6 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
     value: number;
     otherCosts: number;
   }) {
-    console.log(amount, value, otherCosts);
     return String(amount * value + otherCosts);
   }
 
@@ -87,25 +158,36 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
 
       <Formik
         initialValues={{
-          assetType: '',
+          stock: '',
           asset: '',
           amount: '',
           buyDate: dateToISOString(new Date()),
           otherCosts: '',
           value: '',
         }}
-        onSubmit={async () => {
-          ('');
+        validationSchema={schema}
+        onSubmit={async (data: IFormData) => {
+          const findedStock = stocksWalletList?.find(({ stock }) => stock === data.stock);
+          setOnQuery(true);
+
+          if (findedStock) {
+            editStock(data, findedStock);
+          } else {
+            addStock(data);
+          }
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
           <Form>
             <ReactAsyncSelect
               label="Ativo"
+              name="stock"
               loadOptions={requestStocks}
+              error={touched.stock && errors.stock ? errors.stock : null}
               onChange={(evt) => {
                 const stockValue = stocksList.find((stock) => stock.stock === evt.value)?.close;
                 setFieldValue('value', applyMask({ mask: 'BRL', value: String(stockValue) }).value);
+                setFieldValue('stock', evt.value);
               }}
             />
 
@@ -182,6 +264,7 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
 
             <Button
               center
+              loading={onQuery}
               label="Salvar"
               type="submit"
               color={theme.color.primary}
