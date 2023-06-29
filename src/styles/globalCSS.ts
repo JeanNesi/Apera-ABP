@@ -168,7 +168,7 @@ export default createGlobalStyle`
 
   input[disabled],textarea[disabled],select[disabled] {
     cursor: not-allowed;
-    background-color: ${theme.color.gray1};
+    background-color: ${theme.color.dark50};
     color: ${theme.color.gray4}
   }
 

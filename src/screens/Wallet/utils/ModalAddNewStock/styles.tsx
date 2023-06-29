@@ -55,3 +55,12 @@ export const InputsWrapper = styled.div`
   display: flex;
   gap: ${theme.size.xsm};
 `;
+
+export const TotalValueContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 38px;
+  border-radius: ${theme.size.xxsm};
+  border: 1px solid ${theme.color.gray4};
+`;

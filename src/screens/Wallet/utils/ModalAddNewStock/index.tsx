@@ -5,22 +5,37 @@ import { theme } from '../../../../styles/theme';
 import { Form, Formik } from 'formik';
 import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Button } from '../../../../components/Buttons/Button';
-import { FormikSelect } from '../../../../components/Form/FormikSelect';
 import ReactAsyncSelect from '../../../../components/ReactAsyncSelect';
 import { BrApi } from '../../../../services/brApi';
-import { IFormData, IModalAddNewStock } from './types';
+import { IModalAddNewStock } from './types';
+import { applyMask, dateToISOString, unMask } from '../../../../utils/functions';
 
 export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
+  const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [selectedTransactionType, setSelectedTransactionType] = useState<'buy' | 'sale'>('buy');
 
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
     await BrApi.get(`/quote/list?search=${search}&limit=10`).then(({ data }) => {
+      setStocksList(data.stocks);
       data.stocks.forEach(({ stock, logo }: IStocks) => {
         options.push({ label: stock, value: stock, icon: logo });
       });
     });
     return options;
+  }
+
+  function calcTotalValue({
+    amount,
+    value,
+    otherCosts,
+  }: {
+    amount: number;
+    value: number;
+    otherCosts: number;
+  }) {
+    console.log(amount, value, otherCosts);
+    return String(amount * value + otherCosts);
   }
 
   return (
@@ -75,31 +90,29 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
           assetType: '',
           asset: '',
           amount: '',
-          buyDate: '',
+          buyDate: dateToISOString(new Date()),
           otherCosts: '',
           value: '',
         }}
-        onSubmit={async (data: IFormData) => {
+        onSubmit={async () => {
           ('');
         }}
       >
-        {({ errors, values, touched }) => (
+        {({ errors, values, touched, setFieldValue }) => (
           <Form>
-            <FormikSelect
-              name="assetType"
-              label="Tipo de ativo"
-              placeholder="Selecione"
-              error={touched.assetType && errors.assetType ? errors.assetType : null}
-            >
-              <option value="">Selecione</option>
-            </FormikSelect>
-
-            <ReactAsyncSelect label="Ativo" loadOptions={requestStocks} onChange={() => ''} />
+            <ReactAsyncSelect
+              label="Ativo"
+              loadOptions={requestStocks}
+              onChange={(evt) => {
+                const stockValue = stocksList.find((stock) => stock.stock === evt.value)?.close;
+                setFieldValue('value', applyMask({ mask: 'BRL', value: String(stockValue) }).value);
+              }}
+            />
 
             <Style.InputsWrapper>
               <FormikInput
                 name="buyDate"
-                label="Data da compra"
+                label={selectedTransactionType === 'buy' ? 'Data da compra' : 'Data da venda'}
                 type="date"
                 placeholder="Ex: joao.silva@satc.com"
                 value={values.buyDate}
@@ -111,7 +124,14 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
                 label="Quantidade"
                 value={values.amount}
                 placeholder="Ex: 10"
+                maxLength={5}
                 error={touched.amount && errors.amount ? errors.amount : null}
+                onChange={(evt) => {
+                  setFieldValue(
+                    'amount',
+                    applyMask({ mask: 'NUM', value: evt.target.value }).value,
+                  );
+                }}
               />
             </Style.InputsWrapper>
 
@@ -122,16 +142,43 @@ export const ModalAddNewStock = ({ setModal }: IModalAddNewStock) => {
                 value={values.value}
                 placeholder="R$ 20,00"
                 error={touched.value && errors.value ? errors.value : null}
+                maxLength={15}
+                onChange={(evt) => {
+                  setFieldValue('value', applyMask({ mask: 'BRL', value: evt.target.value }).value);
+                }}
               />
 
               <FormikInput
-                name="amount"
+                name="otherCosts"
                 label="Outros custos"
-                value={values.amount}
+                value={values.otherCosts}
                 placeholder="R$ 2,00"
-                error={touched.amount && errors.amount ? errors.amount : null}
+                error={touched.otherCosts && errors.otherCosts ? errors.otherCosts : null}
+                maxLength={15}
+                onChange={(evt) => {
+                  setFieldValue(
+                    'otherCosts',
+                    applyMask({ mask: 'BRL', value: evt.target.value }).value,
+                  );
+                }}
               />
             </Style.InputsWrapper>
+
+            <Style.TotalValueContainer>
+              <p className="p5">
+                Valor total:{' '}
+                {
+                  applyMask({
+                    mask: 'BRL',
+                    value: calcTotalValue({
+                      amount: Number(values.amount),
+                      otherCosts: Number(unMask(values.otherCosts)),
+                      value: Number(unMask(values.value)),
+                    }),
+                  }).value
+                }
+              </p>
+            </Style.TotalValueContainer>
 
             <Button
               center
