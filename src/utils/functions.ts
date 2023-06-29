@@ -93,3 +93,9 @@ export const applyMask = ({
   }
   return Mask;
 };
+
+export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '').replaceAll('R', '');
+
+export function dateToISOString(date: Date) {
+  return new Date(date).toISOString().substring(0, 10);
+}

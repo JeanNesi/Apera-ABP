@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { theme } from '../../styles/theme';
 
 export const Background = styled.div`
-  min-height: 85vh;
+  height: 68vh;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -44,31 +44,18 @@ export const LoginContainer = styled.div`
   }
 `;
 
-export const RegisterContainer = styled.div`
+export const ImageContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: ${theme.size.xsm};
+  margin-bottom: 16px;
 `;
 
-export const RegisterContent = styled.div`
+export const UserImage = styled.img`
+  border-radius: 50%;
+`;
+
+export const ButtonsContainer = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: ${theme.size.sm};
-  width: 100%;
-  margin-top: ${theme.size.sm};
-
-  > p {
-    white-space: nowrap;
-    color: ${theme.color.gray2};
-  }
-
-  > hr {
-    width: 100%;
-    height: 1px;
-    border: none;
-    background: ${theme.color.gray2};
-  }
+  flex-direction: column;
+  gap: ${theme.size.xsm};
 `;

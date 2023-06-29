@@ -9,6 +9,7 @@ import { NotFoundPage } from './screens/NotFoundPage';
 import { SignUp } from './screens/Authentication/SignUp';
 import { Wallet } from './screens/Wallet';
 import { Home } from './screens/Home';
+import { Settings } from './screens/Settings';
 
 const AppRoutes = () => (
   <AuthProvider>
@@ -29,6 +30,7 @@ const AppRoutes = () => (
           <Route path="/home" element={<Home />} />
           <Route path="/dashboard/:stockName" element={<Dashboard />} />
           <Route path="/wallet" element={<Wallet />} />
+          <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>
     </BrowserRouter>

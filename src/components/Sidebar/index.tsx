@@ -3,16 +3,6 @@ import { icons } from '../../assets/icons';
 import * as Style from './styles';
 import { Search } from '../Search';
 
-interface ISidebar {
-  isOpen: boolean;
-}
-
-interface ISidebarContent {
-  icon: string;
-  label: string;
-  url: string;
-}
-
 export const Sidebar = ({ isOpen }: ISidebar) => {
   const sidebarContent: ISidebarContent[] = [
     {
@@ -28,7 +18,7 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
     {
       icon: icons.gear,
       label: 'Configurações',
-      url: '/patrols',
+      url: '/settings',
     },
     {
       icon: icons.power,

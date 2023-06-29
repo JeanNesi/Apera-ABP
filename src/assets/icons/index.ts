@@ -12,9 +12,16 @@ import downValue from './downValue.svg';
 import upValue from './upValue.svg';
 import homeImage from './homeImage.svg';
 import power from './power.svg';
+import plus from './plus.svg';
+import finance from './finance.svg';
+import x from './x.svg';
+import upArrow from './upArrow.svg';
+import downArrowGray from './downArrowGray.svg';
 
 export const icons = {
   downArrow,
+  upArrow,
+  downArrowGray,
   aperaLogo,
   hamburgerMenu,
   userImage,
@@ -28,4 +35,7 @@ export const icons = {
   downValue,
   homeImage,
   power,
+  plus,
+  finance,
+  x,
 };

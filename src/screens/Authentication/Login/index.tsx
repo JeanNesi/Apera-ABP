@@ -35,7 +35,7 @@ export const Login = () => {
         const loginAccount = data.find((login) => login.email === formData.email);
 
         if (loginAccount && loginAccount.password === formData.password) {
-          navigate('/dashboard/PETR4');
+          navigate('/home');
           localStorage.setItem('authToken', loginAccount.id);
         } else {
           toast.error('E-mail ou senha incorreto!');

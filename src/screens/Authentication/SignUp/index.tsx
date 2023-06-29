@@ -15,6 +15,7 @@ import { icons } from '../../../assets/icons';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
+import { IFormData } from './types';
 
 export const SignUp = () => {
   const navigate = useNavigate();

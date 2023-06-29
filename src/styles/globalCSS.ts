@@ -148,7 +148,7 @@ export default createGlobalStyle`
     background-color: transparent;
     border: 1px solid ${theme.color.gray4};
     color: ${theme.color.gray2};
-    height: 56px;
+    height: 38px;
     border-radius: ${theme.size.xxsm};
     padding: ${theme.size.xsm} ${theme.size.sm};
     :placeholder-shown{
@@ -168,7 +168,7 @@ export default createGlobalStyle`
 
   input[disabled],textarea[disabled],select[disabled] {
     cursor: not-allowed;
-    background-color: ${theme.color.gray1};
+    background-color: ${theme.color.dark50};
     color: ${theme.color.gray4}
   }
 
@@ -203,13 +203,13 @@ export default createGlobalStyle`
     width: 100%;
     background-color: transparent;
     border: 1px solid ${theme.color.gray4};
-    height: 40px;
+    height: 38px;
     border-radius: ${theme.size.xxsm};
     padding: 0 ${theme.size.sm};
     background-image: url(${icons.downArrow});
     background-repeat: no-repeat, repeat;
     background-position: right ${theme.size.sm} top 50%, 0 0;
-    background-size: 16px;
+    background-size: 12px;
     color: ${theme.color.gray2};
   }
 

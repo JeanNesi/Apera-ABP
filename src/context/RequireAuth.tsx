@@ -19,6 +19,7 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
         setUser({
           id: data.id,
           name: data.name,
+          email: data.email,
           profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
         });
       })

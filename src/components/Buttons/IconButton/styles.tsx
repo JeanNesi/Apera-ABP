@@ -17,7 +17,7 @@ export const ContainerButton = styled.div<{
   transition: 0.25s cubic-bezier(0.39, 0.575, 0.565, 1);
 
   > p {
-    ${({ color }) => color && `color: ${color};`}
+    ${({ $color }) => $color && `color: ${$color};`}
     ${({ $fontWeight }) => $fontWeight && `font-weight: ${$fontWeight};`}
 
 
@@ -36,7 +36,7 @@ export const ContainerButton = styled.div<{
   ${({ $labelPos }) => $labelPos === 'left' && 'flex-direction: row-reverse;'}
   ${({ $labelPos }) => $labelPos === 'bottom' && 'flex-direction: column;'}
 
-  :hover {
+  &:hover {
     opacity: 0.7;
   }
 `;
