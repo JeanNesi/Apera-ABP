@@ -27,7 +27,9 @@ export const Dashboard = () => {
     setLoading(true);
     setStockSeries([]);
 
-    BrApi.get(`/quote/${stockName}?range=5y&interval=1mo&fundamental=true`)
+    BrApi.get(
+      `/quote/${stockName}?range=3mo&interval=1d&fundamental=true&token=wmrAAgWifqbawiycgFp1fo`,
+    )
       .then(({ data }) => {
         setStockData(data.results[0]);
         setLastUpdate(data.requestedAt);
@@ -47,7 +49,7 @@ export const Dashboard = () => {
   }
 
   async function requestStocks() {
-    await BrApi.get(`/quote/list?limit=20`)
+    await BrApi.get(`/quote/list?limit=20&token=wmrAAgWifqbawiycgFp1fo`)
       .then(({ data }) => {
         setStocksList(data.stocks.reverse());
       })
