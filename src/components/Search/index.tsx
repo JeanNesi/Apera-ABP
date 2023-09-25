@@ -12,11 +12,13 @@ export const Search = ({ iconPosition = 'right' }: ISearch) => {
 
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
-    await BrApi.get(`/quote/list?search=${search}&limit=10`).then(({ data }) => {
-      data.stocks.forEach(({ stock, logo }: IStocks) => {
-        options.push({ label: stock, value: stock, icon: logo });
-      });
-    });
+    await BrApi.get(`/quote/list?search=${search}&limit=10&token=wmrAAgWifqbawiycgFp1fo`).then(
+      ({ data }) => {
+        data.stocks.forEach(({ stock, logo }: IStocks) => {
+          options.push({ label: stock, value: stock, icon: logo });
+        });
+      },
+    );
     return options;
   }
 
