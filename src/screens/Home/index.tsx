@@ -18,9 +18,7 @@ export const Home = () => {
 
   async function requestStockData() {
     setStockSeries([]);
-    BrApi.get(
-      `/quote/%5EBVSP?token=${import.meta.env.BRAPI_DEV}&range=3mo&interval=1d&fundamental=true`,
-    )
+    BrApi.get(`/quote/%5EBVSP?token=hXAyiiQ3NhNz1Kp1ciC6pu&range=3mo&interval=1d&fundamental=true`)
       .then(({ data }) => {
         setStockData(data.results[0]);
 
@@ -39,7 +37,7 @@ export const Home = () => {
   }
 
   async function requestStocks() {
-    await BrApi.get(`/quote/list?limit=20&token=${import.meta.env.BRAPI_DEV}`)
+    await BrApi.get(`/quote/list?limit=20&token=hXAyiiQ3NhNz1Kp1ciC6pu`)
       .then(({ data }) => {
         setStocksList(data.stocks.reverse());
       })
