@@ -51,7 +51,7 @@ export const Dashboard = () => {
   }
 
   async function requestStocks() {
-    await BrApi.get(`/quote/list?limit=20&token=${import.meta.env.BRAPI_DEV}`)
+    await BrApi.get(`/quote/list?limit=20&token=hXAyiiQ3NhNz1Kp1ciC6pu`)
       .then(({ data }) => {
         setStocksList(data.stocks.reverse());
       })

@@ -23,7 +23,7 @@ export const Wallet = () => {
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
 
   async function requestUpdatedStockValues(tickers: string) {
-    await BrApi.get(`/quote/${tickers}?token=${import.meta.env.BRAPI_DEV}`)
+    await BrApi.get(`/quote/${tickers}?token=hXAyiiQ3NhNz1Kp1ciC6pu`)
       .then(({ data }: { data: IStockData }) => {
         data.results.forEach((element, i) => {
           setStocksWalletList((prevState) => {

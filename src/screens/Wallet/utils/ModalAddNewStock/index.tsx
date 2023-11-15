@@ -95,14 +95,14 @@ export const ModalAddNewStock = ({ setModal, stocksWalletList, callback }: IModa
 
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
-    await BrApi.get(
-      `/quote/list?token=${import.meta.env.BRAPI_DEV}&search=${search}&limit=10`,
-    ).then(({ data }) => {
-      setStocksList(data.stocks);
-      data.stocks.forEach(({ stock, logo }: IStocks) => {
-        options.push({ label: stock, value: stock, icon: logo });
-      });
-    });
+    await BrApi.get(`/quote/list?token=hXAyiiQ3NhNz1Kp1ciC6pu&search=${search}&limit=10`).then(
+      ({ data }) => {
+        setStocksList(data.stocks);
+        data.stocks.forEach(({ stock, logo }: IStocks) => {
+          options.push({ label: stock, value: stock, icon: logo });
+        });
+      },
+    );
     return options;
   }
 
