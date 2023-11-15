@@ -28,7 +28,9 @@ export const Dashboard = () => {
     setStockSeries([]);
 
     BrApi.get(
-      `/quote/${stockName}?range=3mo&interval=1d&fundamental=true&token=wmrAAgWifqbawiycgFp1fo`,
+      `/quote/${stockName}?range=3mo&interval=1d&fundamental=true&token=${
+        import.meta.env.BRAPI_DEV
+      }`,
     )
       .then(({ data }) => {
         setStockData(data.results[0]);
@@ -49,7 +51,7 @@ export const Dashboard = () => {
   }
 
   async function requestStocks() {
-    await BrApi.get(`/quote/list?limit=20&token=wmrAAgWifqbawiycgFp1fo`)
+    await BrApi.get(`/quote/list?limit=20&token=${import.meta.env.BRAPI_DEV}`)
       .then(({ data }) => {
         setStocksList(data.stocks.reverse());
       })
