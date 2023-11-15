@@ -22,17 +22,16 @@ export const TableRowHead = styled.tr<{ $bgColor?: string }>`
   vertical-align: top;
 `;
 
-export const TableRow = styled.tr<{ $bgColor?: string }>`
+export const TableRow = styled.tr<{ $bgColor?: string; $hasOnClick: boolean }>`
   ${({ $bgColor }) => $bgColor && `background-color: ${$bgColor};`};
-  &:hover {
-    cursor: pointer;
-    ${({ $bgColor }) =>
-      $bgColor &&
-      css`
-        /* opacity: 0.7; */
-        /* background-color: ${`${$bgColor}B3`}; */
-      `};
-  }
+
+  ${({ $hasOnClick }) =>
+    $hasOnClick &&
+    css`
+      &:hover {
+        cursor: pointer;
+      }
+    `}
 `;
 
 export const TableColHeader = styled.th<{ $cssProps: any; $cssOnMedia: any }>`

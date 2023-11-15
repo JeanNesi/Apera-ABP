@@ -1,11 +1,11 @@
-import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import * as Style from './styles';
 import { useContext, useEffect, useState } from 'react';
 import { IconButton } from '../Buttons/IconButton';
 import { icons } from '../../assets/icons';
 import { AuthContext } from '../../context/AuthContext';
-import { Sidebar } from '../Sidebar';
 import { Search } from '../Search';
+import { Sidebar } from '../Sidebar';
 
 export const Navbar = () => {
   const navigate = useNavigate();
@@ -15,9 +15,6 @@ export const Navbar = () => {
   const [sidebarIsOpen, setSidebarIsOpen] = useState(false);
 
   useEffect(() => {
-    if (window.location.href.endsWith('/')) {
-      navigate('/login');
-    }
     setSidebarIsOpen(false);
   }, [location.pathname]);
 
@@ -39,18 +36,29 @@ export const Navbar = () => {
             <Style.SearchContainer>
               <Search />
             </Style.SearchContainer>
-            <Link to="/settings">
-              <img src={user?.profilePicture} alt="" onClick={() => navigate('/settings')} />
-            </Link>
+
+            {localStorage.getItem('authToken') || user ? (
+              <Link to="/settings">
+                <img
+                  src={user?.profilePicture ?? localStorage.getItem('profilePicture') ?? ''}
+                  alt=""
+                  onClick={() => navigate('/settings')}
+                />
+              </Link>
+            ) : (
+              <Style.NotLoggedButtonsContainer>
+                <Link to="/login">Login</Link>
+
+                <p>ou</p>
+
+                <Link to="/signup">Cadastre-se</Link>
+              </Style.NotLoggedButtonsContainer>
+            )}
           </Style.RightSide>
         </Style.NavbarContent>
       </Style.NavbarContainer>
 
       <Sidebar isOpen={sidebarIsOpen} />
-
-      <Style.AppContent>
-        <Outlet />
-      </Style.AppContent>
     </>
   );
 };

@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion';
 import * as Style from './styles';
 import { formatCurrencyBRL } from '../../utils/functions';
+import { useNavigate } from 'react-router-dom';
 
 export const StockCard = ({ stockInfos }: IStockCard) => {
+  const navigate = useNavigate();
   return (
-    <motion.div key={stockInfos.stock}>
+    <motion.div
+      key={stockInfos.stock}
+      onDoubleClick={() => navigate(`/dashboard/${stockInfos.stock}`)}
+    >
       <Style.StockContainer>
         <Style.LeftSide>
           <h4>{stockInfos.stock}</h4>

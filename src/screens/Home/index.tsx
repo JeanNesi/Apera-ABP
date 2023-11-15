@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { Slider } from '../../components/Slider';
 import { StockCard } from '../../components/StockCard';
 import { toast } from 'react-toastify';
-import { icons } from '../../assets/icons';
 import * as Style from './styles';
 import { theme } from '../../styles/theme';
 import { ApexOptions } from 'apexcharts';
 import ReactApexChart from 'react-apexcharts';
 import { DotLoading } from '../../components/DotLoading';
 import { BrApi } from '../../services/brApi';
+import { Navbar } from '../../components/Navbar';
 
 export const Home = () => {
   const [loading, setLoading] = useState(true);
@@ -113,6 +113,22 @@ export const Home = () => {
 
   return (
     <>
+      <Navbar />
+
+      <Style.BannerSection>
+        <Style.BannerContainer id="home">
+          <Style.BannerWrapper>
+            <Style.BannerContent>
+              <h1>Mantenha seus investimentos no rumo certo</h1>
+              <h5>
+                Descubra o poder do controle financeiro: Tome decisões informadas e conquiste seus
+                sonhos.
+              </h5>
+            </Style.BannerContent>
+          </Style.BannerWrapper>
+        </Style.BannerContainer>
+      </Style.BannerSection>
+
       {loading && (
         <Style.LoadingContainer>
           <DotLoading />
@@ -121,26 +137,58 @@ export const Home = () => {
 
       {!loading && (
         <>
-          <Style.Container>
-            <Style.ChartContainer>
-              <Style.IbovespaInfosContainer>
-                <h3>Ibovespa</h3>
-                <h3>{stockData?.regularMarketPrice.toLocaleString('pt-br')}</h3>
+          <Style.Main>
+            <Slider>
+              {stocksList.map((element) => (
+                <StockCard stockInfos={element} key={element.stock} />
+              ))}
+            </Slider>
+            <Style.Container>
+              <Style.ChartContainer>
+                <Style.IbovespaInfosContainer>
+                  <Style.InfoWrapper>
+                    <h3>Ibovespa (IBOV)</h3>
+                    <p className="p5">
+                      IBOVESPA{' '}
+                      <span>
+                        Atualizado {new Date(stockData?.updatedAt ?? '').toLocaleString('pt-br')}
+                      </span>
+                    </p>
+                  </Style.InfoWrapper>
 
-                <p className="p2">
-                  {stockData?.regularMarketChange.toLocaleString('pt-br')} (
-                  {stockData?.regularMarketChangePercent.toFixed(2)})
-                </p>
-              </Style.IbovespaInfosContainer>
-              <ReactApexChart options={options} series={series} type="area" height={350} />
-            </Style.ChartContainer>
-            <img src={icons.homeImage} alt="" />
-          </Style.Container>
-          <Slider>
-            {stocksList.map((element) => (
-              <StockCard stockInfos={element} key={element.stock} />
-            ))}
-          </Slider>
+                  <Style.IbovespaInfosContent>
+                    <Style.InfoWrapper>
+                      <h3>{stockData?.regularMarketPrice.toLocaleString('pt-br')}</h3>
+                      <p className="p8">Pontos</p>
+                    </Style.InfoWrapper>
+
+                    <Style.InfoWrapper>
+                      <Style.StockVariantionPercentage
+                        $percentage={stockData?.regularMarketChangePercent ?? 0}
+                      >
+                        {(stockData?.regularMarketChangePercent ?? 0) > 0 && '+'}
+                        {(stockData?.regularMarketChangePercent ?? 0) < 0 && '-'}
+                        {stockData?.regularMarketChangePercent.toFixed(2)}
+                      </Style.StockVariantionPercentage>
+                      <p className="p8">Variação (Dia)</p>
+                    </Style.InfoWrapper>
+
+                    <Style.InfoWrapper>
+                      <h6>{stockData?.regularMarketDayLow.toLocaleString('pt-br')}</h6>
+                      <p className="p8">Min (Dia)</p>
+                    </Style.InfoWrapper>
+
+                    <Style.InfoWrapper>
+                      <h6>{stockData?.regularMarketDayHigh.toLocaleString('pt-br')}</h6>
+                      <p className="p8">Max (Dia)</p>
+                    </Style.InfoWrapper>
+                  </Style.IbovespaInfosContent>
+                </Style.IbovespaInfosContainer>
+                <ReactApexChart options={options} series={series} type="area" height={350} />
+              </Style.ChartContainer>
+              {/* <img src={icons.charts} alt="" /> */}
+            </Style.Container>
+          </Style.Main>
         </>
       )}
     </>

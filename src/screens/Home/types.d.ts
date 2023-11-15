@@ -52,4 +52,5 @@ interface IStockData {
   priceEarnings: number;
   earningsPerShare: number;
   logourl: string;
+  updatedAt: string;
 }

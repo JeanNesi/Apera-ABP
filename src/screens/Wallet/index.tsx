@@ -12,16 +12,15 @@ import { icons } from '../../assets/icons';
 import { theme } from '../../styles/theme';
 import * as Style from './styles';
 import { ModalAddNewStock } from './utils/ModalAddNewStock';
-import { ModalDeleteStock } from './utils/ModalDeleteStock';
+import { useNavigate } from 'react-router-dom';
 
 export const Wallet = () => {
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [stocksWalletList, setStocksWalletList] = useState<IStocksWalletList[]>([]);
-  const [selectedStockId, setSelectedStockId] = useState('');
 
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
-  const [modalDeletetockIsOpen, setModalDeleteStockIsOpen] = useState(false);
 
   async function requestUpdatedStockValues(tickers: string) {
     await BrApi.get(`/quote/${tickers}?token=wmrAAgWifqbawiycgFp1fo`)
@@ -93,24 +92,13 @@ export const Wallet = () => {
         />
       )}
 
-      {modalDeletetockIsOpen && (
-        <ModalDeleteStock
-          setModal={setModalDeleteStockIsOpen}
-          stockId={selectedStockId}
-          callback={() => {
-            setStocksWalletList([]);
-            requestWallet();
-          }}
-        />
-      )}
-
       {loading && (
         <Style.LoadingContainer>
           <DotLoading />
         </Style.LoadingContainer>
       )}
 
-      {!loading && (
+      {!loading && !stocksWalletList.length && (
         <IconButton
           label="Adicionar ativo"
           icon={icons.plus}
@@ -122,6 +110,54 @@ export const Wallet = () => {
 
       {!loading && !!stocksWalletList.length && (
         <>
+          <Style.WalletInfosContainer>
+            <Style.WalletInfosWrapper>
+              <img src={icons.piggyBank} alt="" />
+              <h6>Valor aplicado</h6>
+              <p className="p5">R$ 1.168,07</p>
+            </Style.WalletInfosWrapper>
+
+            <Style.WalletInfosWrapper>
+              <img src={icons.circleDollar} alt="" />
+              <h6>Saldo bruto</h6>
+              <p className="p5">R$ 1.335,97</p>
+            </Style.WalletInfosWrapper>
+
+            <Style.WalletInfosWrapper>
+              <img src={icons.percent} alt="" />
+              <h6>Variação</h6>
+              <Style.VariationValueContainer className="p5" $variation={14.37}>
+                + 14,37%
+              </Style.VariationValueContainer>
+            </Style.WalletInfosWrapper>
+
+            <Style.WalletInfosWrapper>
+              <img src={icons.wallet} alt="" />
+              <h6>Carteiras</h6>
+
+              <p className="p5">Carteira 1</p>
+            </Style.WalletInfosWrapper>
+          </Style.WalletInfosContainer>
+
+          <Style.ButtonsContainer>
+            <IconButton
+              label="Ver lançamentos"
+              icon={icons.scroll}
+              onClick={() => setModalAddNewStockIsOpen(true)}
+              className="p3"
+              size="8px"
+              color={theme.color.white}
+            />
+
+            <IconButton
+              label="Adicionar ativo"
+              icon={icons.plus}
+              onClick={() => setModalAddNewStockIsOpen(true)}
+              className="p3"
+              color={theme.color.success}
+            />
+          </Style.ButtonsContainer>
+
           <Table
             colsHeader={[
               { label: 'Ativo' },
@@ -130,38 +166,28 @@ export const Wallet = () => {
               { label: 'Preço atual' },
               { label: 'Valorização' },
               { label: 'Saldo' },
-              { label: '' },
             ]}
           >
             {stocksWalletList.map((stock) => (
               <TableContent
                 key={stock.id}
-                onClick={() => ''}
                 colsBody={[
                   {
                     cell: (
-                      <Style.StockCell>
+                      <Style.StockCell onClick={() => navigate(`/dashboard/${stock.stock}`)}>
                         <img src={stock.stockLogoUrl} alt="" />
                         <p className="p3">{stock.stock}</p>
                       </Style.StockCell>
                     ),
+                    cssProps: {
+                      width: '150px',
+                    },
                   },
                   { cell: stock.amount },
                   { cell: applyMask({ mask: 'BRL', value: String(stock.averagePrice) }).value },
                   { cell: '-' },
                   { cell: `-` },
                   { cell: '-' },
-                  {
-                    cell: (
-                      <IconButton
-                        icon={icons.trash}
-                        onClick={() => {
-                          setSelectedStockId(stock.id);
-                          setModalDeleteStockIsOpen(true);
-                        }}
-                      />
-                    ),
-                  },
                 ]}
               />
             ))}

@@ -41,8 +41,9 @@ export const RightSide = styled.div`
   align-items: center;
   gap: ${theme.size.md};
 
-  a {
+  > a {
     width: 36px;
+    color: ${theme.color.white};
 
     > img {
       height: 40px;
@@ -58,15 +59,13 @@ export const RightSide = styled.div`
   }
 `;
 
-export const AppContent = styled.main`
-  width: 100%;
-  margin: 0 auto;
+export const NotLoggedButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.xsm};
 
-  max-width: 1196px;
-  padding: ${theme.size.xlg} ${theme.size.md};
-
-  @media (max-width: 900px) {
-    padding: ${theme.size.sm};
+  a {
+    color: ${theme.color.white};
   }
 `;
 

@@ -17,5 +17,5 @@ export interface ITableBody {
     cssOnMedia?: CSSProperties;
   }[];
 
-  onClick: () => void;
+  onClick?: () => void;
 }
