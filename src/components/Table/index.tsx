@@ -28,8 +28,9 @@ export const Table = ({ colsHeader, children }: ITableHeader) => (
 export const TableContent = ({ colsBody, onClick }: ITableBody) => (
   <Style.TableRow
     $bgColor={theme.color.dark25}
+    $hasOnClick={!!onClick}
     onClick={() => {
-      onClick();
+      if (onClick) onClick();
     }}
   >
     {colsBody.map((col, i: number) => (

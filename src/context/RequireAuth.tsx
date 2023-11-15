@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from './AuthContext';
 import { Api } from '../services/api';
 import { toast } from 'react-toastify';
@@ -11,6 +11,7 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   async function validateToken() {
     await Api.get(`/login/${localStorage.getItem('authToken')}`)
@@ -22,19 +23,27 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
           email: data.email,
           profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
         });
+        localStorage.setItem(
+          'profilePicture',
+          `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
+        );
       })
-      .catch((err) => {
-        console.log(err);
-        navigate('/login');
+      .catch(() => {
+        if (location.pathname === '/home') {
+          localStorage.clear();
+          return setLoading(false);
+        }
+        navigate('/home');
         toast.error('Token inválido ou expirado!');
       });
   }
 
   useEffect(() => {
-    if (!localStorage.getItem('authToken')) return navigate('/login');
+    if (!localStorage.getItem('authToken') && location.pathname !== '/home')
+      return navigate('/login');
 
     validateToken();
-  }, []);
+  }, [location.pathname]);
 
   return loading ? (
     <LoadingContainer>

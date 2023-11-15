@@ -18,9 +18,20 @@ import x from './x.svg';
 import upArrow from './upArrow.svg';
 import downArrowGray from './downArrowGray.svg';
 import trash from './trash.svg';
+import charts from './charts.svg';
+import banner from './banner.jpg';
+import piggyBank from './piggyBank.svg';
+import circleDollar from './circleDollar.svg';
+import percent from './percent.svg';
+import scroll from './scroll.svg';
 
 export const icons = {
   downArrow,
+  circleDollar,
+  percent,
+  piggyBank,
+  banner,
+  charts,
   trash,
   upArrow,
   downArrowGray,
@@ -39,5 +50,6 @@ export const icons = {
   power,
   plus,
   finance,
+  scroll,
   x,
 };

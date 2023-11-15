@@ -5,7 +5,7 @@ export function formatCurrencyBRL(value: number) {
 }
 
 export function numericScaleIdentifier(number: number) {
-  if (number === undefined) return `R$ 0`;
+  if (!number) return `R$ 0`;
 
   const parts = number.toLocaleString('pt-br').split('.');
 
