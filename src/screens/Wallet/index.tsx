@@ -23,7 +23,7 @@ export const Wallet = () => {
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
 
   async function requestUpdatedStockValues(tickers: string) {
-    await BrApi.get(`/quote/${tickers}?token=wmrAAgWifqbawiycgFp1fo`)
+    await BrApi.get(`/quote/${tickers}?token=${import.meta.env.BRAPI_DEV}`)
       .then(({ data }: { data: IStockData }) => {
         data.results.forEach((element, i) => {
           setStocksWalletList((prevState) => {
@@ -185,9 +185,12 @@ export const Wallet = () => {
                   },
                   { cell: stock.amount },
                   { cell: applyMask({ mask: 'BRL', value: String(stock.averagePrice) }).value },
-                  { cell: '-' },
-                  { cell: `-` },
-                  { cell: '-' },
+                  { cell: stock.currentPrice },
+                  {
+                    cell:
+                      stock.appreciation < 0 ? `${stock.appreciation}%` : `+${stock.appreciation}%`,
+                  },
+                  { cell: stock.balance },
                 ]}
               />
             ))}
