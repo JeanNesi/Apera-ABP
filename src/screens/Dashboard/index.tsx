@@ -28,9 +28,7 @@ export const Dashboard = () => {
     setStockSeries([]);
 
     BrApi.get(
-      `/quote/${stockName}?range=3mo&interval=1d&fundamental=true&token=${
-        import.meta.env.BRAPI_DEV
-      }`,
+      `/quote/${stockName}?range=3mo&interval=1d&fundamental=true&token=hXAyiiQ3NhNz1Kp1ciC6pu`,
     )
       .then(({ data }) => {
         setStockData(data.results[0]);
