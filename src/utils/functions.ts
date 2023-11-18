@@ -73,7 +73,7 @@ export const applyMask = ({
       break;
     case 'BRL':
       Mask = {
-        value: (Number(value.replace(/[^0-9]*/g, '')) / 100).toLocaleString('pt-br', {
+        value: (Number(value) / 100).toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL',
         }),

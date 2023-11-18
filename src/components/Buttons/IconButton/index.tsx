@@ -14,6 +14,7 @@ export const IconButton = ({
   hideLabelOnMedia,
   fontWeight = '500',
   disabled = false,
+  size = '16px',
 }: IIconButton) => (
   <ContainerButton
     style={{ pointerEvents: disabled ? 'none' : 'auto' }}
@@ -25,6 +26,7 @@ export const IconButton = ({
     $color={color}
     $fontWeight={fontWeight}
     $disable={disabled}
+    $size={size}
     onClick={() => {
       onClick();
     }}

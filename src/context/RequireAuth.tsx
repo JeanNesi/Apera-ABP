@@ -10,7 +10,7 @@ import { LoadingContainer } from './styles';
 export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const location = useLocation();
 
   async function validateToken() {
@@ -33,14 +33,14 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
           localStorage.clear();
           return setLoading(false);
         }
-        navigate('/home');
-        toast.error('Token inválido ou expirado!');
+        // navigate('/home');
+        // toast.error('Token inválido ou expirado!');
       });
   }
 
   useEffect(() => {
-    if (!localStorage.getItem('authToken') && location.pathname !== '/home')
-      return navigate('/login');
+    // if (!localStorage.getItem('authToken') && location.pathname !== '/home')
+    //   return navigate('/login');
 
     validateToken();
   }, [location.pathname]);

@@ -1,5 +1,6 @@
-import { styled } from 'styled-components';
+import { css, styled } from 'styled-components';
 import { theme } from '../../styles/theme';
+import { ITab } from './types';
 
 export const Container = styled.div`
   display: flex;
@@ -101,4 +102,56 @@ export const ButtonsContainer = styled.div`
   align-items: center;
   justify-content: flex-end;
   gap: ${theme.size.md};
+`;
+
+export const TabsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+export const TabsHeader = styled.div`
+  display: flex;
+`;
+
+export const Tab = styled.div<{ activeTab: string; tab: ITab }>`
+  height: 28px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  color: ${theme.color.white};
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &::after {
+    content: '';
+    display: block;
+    background: ${theme.color.primary};
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    transition: 0.4s;
+  }
+
+  ${({ tab, activeTab }) =>
+    tab.value === activeTab &&
+    css`
+      &::after {
+        width: 100%;
+        animation: tabWidthAnimation 0.4s;
+        background: ${theme.color.secondary};
+      }
+    `}
+
+  @keyframes tabWidthAnimation {
+    0% {
+      width: 0px;
+    }
+    100% {
+      width: 100%;
+    }
+  }
 `;

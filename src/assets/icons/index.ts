@@ -24,9 +24,11 @@ import piggyBank from './piggyBank.svg';
 import circleDollar from './circleDollar.svg';
 import percent from './percent.svg';
 import scroll from './scroll.svg';
+import pencil from './pencil.svg';
 
 export const icons = {
   downArrow,
+  pencil,
   circleDollar,
   percent,
   piggyBank,

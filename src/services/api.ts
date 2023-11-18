@@ -5,5 +5,5 @@
 import axios from 'axios';
 
 export const Api = axios.create({
-  baseURL: 'https://64976b1383d4c69925a3a538.mockapi.io/api',
+  baseURL: 'http://localhost:8080/api',
 });

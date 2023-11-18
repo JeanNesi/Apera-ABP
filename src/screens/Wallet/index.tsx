@@ -1,26 +1,66 @@
-import { useContext, useEffect, useState } from 'react';
-import { Table, TableContent } from '../../components/Table';
+import { useEffect, useState } from 'react';
 import { Api } from '../../services/api';
 import { toast } from 'react-toastify';
-import { applyMask } from '../../utils/functions';
-import { BrApi } from '../../services/brApi';
-import { IStockData, IStocksWalletList } from './types';
+import { IReleasesList, ITab, IStockData, IStocksWalletList } from './types';
 import { DotLoading } from '../../components/DotLoading';
-import { AuthContext } from '../../context/AuthContext';
 import { IconButton } from '../../components/Buttons/IconButton';
 import { icons } from '../../assets/icons';
 import { theme } from '../../styles/theme';
 import * as Style from './styles';
+
+import { Releases } from './Releases';
+import { ReleaseSummary } from './ReleaseSummary';
 import { ModalAddNewStock } from './utils/ModalAddNewStock';
-import { useNavigate } from 'react-router-dom';
+import { ModalEditRelease } from './utils/ModalEditRelease';
+import { BrApi } from '../../services/brApi';
+import { applyMask } from '../../utils/functions';
 
 export const Wallet = () => {
-  const navigate = useNavigate();
-  const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [releasesList, setReleasesList] = useState<IReleasesList[]>([]);
+
+  const [selectedRelease, setSelectedRelease] = useState<IReleasesList>();
   const [stocksWalletList, setStocksWalletList] = useState<IStocksWalletList[]>([]);
 
+  const [selectedTab, setSelectedTab] = useState<ITab>({
+    label: 'Saídas',
+    value: 'wallet',
+  });
+
+  const tabOptions: ITab[] = [
+    { label: 'Carteira', value: 'wallet' },
+    { label: 'Lançamentos', value: 'releases' },
+  ];
+
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
+  const [modalEditReleaseIsOpen, setModalEditReleaseIsOpen] = useState(false);
+
+  //#region Releases API's
+
+  async function requestReleasesList() {
+    setLoading(true);
+
+    await Api.get(`/release?walletId=1`)
+      .then((res) => {
+        setReleasesList(res.data);
+        console.log(res.data);
+      })
+      .catch(() => toast.error('Algo deu errado'))
+      .finally(() => setLoading(false));
+  }
+
+  async function requestDeleteRelease(releaseId: number) {
+    setLoading(true);
+
+    await Api.delete(`/release/${releaseId}`)
+      .then(() => {
+        toast.success('Lançamento deletado com sucesso!');
+        requestReleasesList();
+      })
+      .catch(() => toast.error('Algo deu errado'));
+  }
+
+  //#endregion
 
   async function requestUpdatedStockValues(tickers: string) {
     await BrApi.get(`/quote/${tickers}?token=hXAyiiQ3NhNz1Kp1ciC6pu`)
@@ -29,21 +69,17 @@ export const Wallet = () => {
           setStocksWalletList((prevState) => {
             const newState = [...prevState];
 
-            newState[i].currentPrice = applyMask({
-              mask: 'BRL',
-              value: String(element.regularMarketPrice * 100),
-            }).value;
+            newState[i].stockLogoUrl = element.logourl;
 
             newState[i].balance = applyMask({
               mask: 'BRL',
-              value: String(element.regularMarketPrice * 100 * newState[i].amount),
+              value: String(Number(element.regularMarketPrice) * 100 * newState[i].amount),
             }).value;
 
-            console.log(
-              newState[i].averagePrice / element.regularMarketPrice,
-              newState[i].averagePrice,
-              element.regularMarketPrice,
-            );
+            newState[i].currentPrice = applyMask({
+              mask: 'BRL',
+              value: String(Number((element.regularMarketPrice * 100).toFixed(2))),
+            }).value;
 
             newState[i].appreciation = Number(
               (100 - newState[i].averagePrice / element.regularMarketPrice).toFixed(2),
@@ -58,15 +94,14 @@ export const Wallet = () => {
   }
 
   async function requestWallet() {
-    setLoading(true);
+    // setLoading(true);
 
-    await Api.get(`/wallet`)
+    await Api.get(`/release/wallet?walletId=${1}`)
       .then((res) => {
-        const stocks = res.data.filter((element: any) => element.userId === user?.id);
-        setStocksWalletList(stocks);
+        setStocksWalletList(res.data);
 
-        if (stocks.length) {
-          const tickers = stocks.map((element: IStocksWalletList) => element.stock).toString();
+        if (res.data.length) {
+          const tickers = res.data.map((element: IStocksWalletList) => element.stock).toString();
           requestUpdatedStockValues(tickers);
         } else {
           setLoading(false);
@@ -77,6 +112,7 @@ export const Wallet = () => {
 
   useEffect(() => {
     requestWallet();
+    requestReleasesList();
   }, []);
 
   return (
@@ -84,10 +120,18 @@ export const Wallet = () => {
       {modalAddNewStockIsOpen && (
         <ModalAddNewStock
           setModal={setModalAddNewStockIsOpen}
-          stocksWalletList={stocksWalletList}
           callback={() => {
-            setStocksWalletList([]);
-            requestWallet();
+            requestReleasesList();
+          }}
+        />
+      )}
+
+      {modalEditReleaseIsOpen && selectedRelease && (
+        <ModalEditRelease
+          releaseDetails={selectedRelease}
+          setModal={setModalEditReleaseIsOpen}
+          callback={() => {
+            requestReleasesList();
           }}
         />
       )}
@@ -98,7 +142,7 @@ export const Wallet = () => {
         </Style.LoadingContainer>
       )}
 
-      {!loading && !stocksWalletList.length && (
+      {!loading && true && (
         <IconButton
           label="Adicionar ativo"
           icon={icons.plus}
@@ -108,7 +152,7 @@ export const Wallet = () => {
         />
       )}
 
-      {!loading && !!stocksWalletList.length && (
+      {!loading && true && (
         <>
           <Style.WalletInfosContainer>
             <Style.WalletInfosWrapper>
@@ -141,15 +185,6 @@ export const Wallet = () => {
 
           <Style.ButtonsContainer>
             <IconButton
-              label="Ver lançamentos"
-              icon={icons.scroll}
-              onClick={() => setModalAddNewStockIsOpen(true)}
-              className="p3"
-              size="8px"
-              color={theme.color.white}
-            />
-
-            <IconButton
               label="Adicionar ativo"
               icon={icons.plus}
               onClick={() => setModalAddNewStockIsOpen(true)}
@@ -158,47 +193,38 @@ export const Wallet = () => {
             />
           </Style.ButtonsContainer>
 
-          <Table
-            colsHeader={[
-              { label: 'Ativo' },
-              { label: 'Quantidade' },
-              { label: 'Preço médio' },
-              { label: 'Preço atual' },
-              { label: 'Valorização' },
-              { label: 'Saldo' },
-            ]}
-          >
-            {stocksWalletList.map((stock) => (
-              <TableContent
-                key={stock.id}
-                colsBody={[
-                  {
-                    cell: (
-                      <Style.StockCell onClick={() => navigate(`/dashboard/${stock.stock}`)}>
-                        <img src={stock.stockLogoUrl} alt="" />
-                        <p className="p3">{stock.stock}</p>
-                      </Style.StockCell>
-                    ),
-                    cssProps: {
-                      width: '150px',
-                    },
-                  },
-                  { cell: stock.amount },
-                  { cell: applyMask({ mask: 'BRL', value: String(stock.averagePrice) }).value },
-                  { cell: stock.currentPrice },
-                  {
-                    cell:
-                      stock.appreciation < 0 ? `${stock.appreciation}%` : `+${stock.appreciation}%`,
-                  },
-                  { cell: stock.balance },
-                ]}
-              />
-            ))}
-          </Table>
+          <Style.TabsContainer>
+            <Style.TabsHeader>
+              {tabOptions.map((category) => (
+                <Style.Tab
+                  activeTab={selectedTab.value}
+                  tab={category}
+                  onClick={() => {
+                    setSelectedTab(category);
+                  }}
+                >
+                  <h6>{category.label}</h6>
+                </Style.Tab>
+              ))}
+            </Style.TabsHeader>
+          </Style.TabsContainer>
         </>
       )}
 
-      {!loading && !stocksWalletList.length && (
+      {selectedTab.value === 'wallet' && <ReleaseSummary stocksWalletList={stocksWalletList} />}
+
+      {selectedTab.value === 'releases' && (
+        <Releases
+          releasesList={releasesList}
+          onEditClick={(release) => {
+            setModalEditReleaseIsOpen(true);
+            setSelectedRelease(release);
+          }}
+          onTrashClick={(id) => requestDeleteRelease(id)}
+        />
+      )}
+
+      {!loading && false && (
         <Style.NoResultsContainer>
           <img src={icons.finance} alt="" />
           <h5>Sua carteira está vazia!</h5>

@@ -7,20 +7,24 @@ import { FormikInput } from '../../../../components/Form/FormikInput';
 import { Button } from '../../../../components/Buttons/Button';
 import ReactAsyncSelect from '../../../../components/ReactAsyncSelect';
 import { BrApi } from '../../../../services/brApi';
-import { IFormData, IModalAddNewStock } from './types';
+import { IFormData, IModalEditRelease } from './types';
 import { applyMask, dateToISOString, unMask } from '../../../../utils/functions';
 
 import * as yup from 'yup';
 import { Api } from '../../../../services/api';
 import { toast } from 'react-toastify';
 
-export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
+export const ModalEditRelease = ({ setModal, callback, releaseDetails }: IModalEditRelease) => {
   const [onQuery, setOnQuery] = useState(false);
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
-  const [selectedTransactionType, setSelectedTransactionType] = useState<'buy' | 'sale'>('buy');
+  const [selectedTransactionType, setSelectedTransactionType] = useState<'COMPRA' | 'VENDA'>(
+    'COMPRA',
+  );
 
   const schema = yup.object({
-    stock: yup.string().required('Selecione uma ação.'),
+    stock: yup.object({
+      value: yup.string().required('Selecione uma ação.'),
+    }),
     buyDate: yup.string().required('Data é obrigatória.'),
     amount: yup.string().required('Quantidade é obrigatória.'),
     value: yup.string().required('Valor é obrigatório.'),
@@ -29,8 +33,9 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
 
   async function addStock(data: IFormData) {
     console.log('aaaaaaaaaaaa');
-    const selectedStockInfos = stocksList.find((stock) => stock.stock === data.stock);
-    await Api.post(`/release`, {
+    const selectedStockInfos = stocksList.find((stock) => stock.stock === data.stock.value);
+    await Api.put(`/release/${releaseDetails.id}`, {
+      id: releaseDetails.id,
       amount: Number(unMask(data.amount)),
       asset: {
         companyImage: selectedStockInfos?.logo,
@@ -39,7 +44,7 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
       },
       extraCosts: Number(unMask(data.otherCosts)),
       price: Number(unMask(data.value)),
-      releaseType: 'COMPRA',
+      releaseType: selectedTransactionType,
       wallet: {
         id: 1,
       },
@@ -85,9 +90,9 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
     <Modal title="Adicionar Transação" setModal={() => setModal(false)}>
       <Style.TransactionTypesContainer>
         <Style.TransactionTypeButton
-          $isSelected={selectedTransactionType === 'buy'}
+          $isSelected={selectedTransactionType === 'COMPRA'}
           $type="buy"
-          onClick={() => setSelectedTransactionType('buy')}
+          onClick={() => setSelectedTransactionType('COMPRA')}
         >
           <p className="p3">Compra</p>
           <svg
@@ -105,9 +110,9 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
         </Style.TransactionTypeButton>
 
         <Style.TransactionTypeButton
-          $isSelected={selectedTransactionType === 'sale'}
+          $isSelected={selectedTransactionType === 'VENDA'}
           $type="sale"
-          onClick={() => setSelectedTransactionType('sale')}
+          onClick={() => setSelectedTransactionType('VENDA')}
         >
           <p className="p3">Venda</p>
           <svg
@@ -130,11 +135,19 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
 
       <Formik
         initialValues={{
-          stock: '',
-          amount: '',
+          stock: {
+            label: releaseDetails.asset.name ?? '',
+            value: releaseDetails.asset.name ?? '',
+            icon: releaseDetails.asset.companyImage ?? '',
+          },
+          amount: String(releaseDetails.amount),
           buyDate: dateToISOString(new Date()),
-          otherCosts: '',
-          value: '',
+          otherCosts: releaseDetails.extraCosts
+            ? applyMask({ mask: 'BRL', value: String(releaseDetails.extraCosts) }).value
+            : '',
+          value: releaseDetails.price
+            ? applyMask({ mask: 'BRL', value: String(releaseDetails.price) }).value
+            : '',
         }}
         validationSchema={schema}
         onSubmit={async (data: IFormData) => {
@@ -149,21 +162,22 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
               label="Ativo"
               name="stock"
               loadOptions={requestStocks}
-              error={touched.stock && errors.stock ? errors.stock : null}
+              value={values.stock}
+              error={touched.stock?.value && errors.stock?.value ? errors.stock.value : null}
               onChange={(evt) => {
                 const stockValue = (
                   (stocksList.find((stock) => stock.stock === evt.value)?.close ?? 0) * 100
                 )?.toFixed(2);
                 console.log(stockValue);
                 setFieldValue('value', applyMask({ mask: 'BRL', value: stockValue ?? '' }).value);
-                setFieldValue('stock', evt.value);
+                setFieldValue('stock', evt);
               }}
             />
 
             <Style.InputsWrapper>
               <FormikInput
                 name="buyDate"
-                label={selectedTransactionType === 'buy' ? 'Data da compra' : 'Data da venda'}
+                label={selectedTransactionType === 'COMPRA' ? 'Data da compra' : 'Data da venda'}
                 type="date"
                 placeholder="Ex: joao.silva@satc.com"
                 value={values.buyDate}

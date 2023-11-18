@@ -10,6 +10,34 @@ export interface IStocksWalletList {
   balance: string;
 }
 
+export type TIabOptions = 'wallet' | 'releases';
+export interface ITab {
+  label: string;
+  value: TIabOptions;
+}
+
+export interface IReleasesList {
+  id: number;
+  amount: number;
+  extraCosts: number;
+  price: number;
+  releaseType: string;
+  asset: { name: string; corporateReason: string; companyImage: string };
+  wallet: { id: number };
+}
+
+export interface IStocksWalletList {
+  stock: string;
+  stockLogoUrl: string;
+  amount: number;
+  averagePrice: number;
+  userId: string;
+  id: string;
+  currentPrice: string;
+  appreciation: number;
+  balance: string;
+}
+
 export interface IStockData {
   results: {
     symbol: string;

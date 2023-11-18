@@ -9,6 +9,7 @@ export const ContainerButton = styled.div<{
   $hideLabelOnMedia?: boolean;
   $fontWeight?: string;
   $disable?: boolean;
+  $size?: string;
 }>`
   display: flex;
   min-width: fit-content;
@@ -38,5 +39,10 @@ export const ContainerButton = styled.div<{
 
   &:hover {
     opacity: 0.7;
+  }
+
+  img {
+    width: ${({ $size }) => $size};
+    height: ${({ $size }) => $size};
   }
 `;
