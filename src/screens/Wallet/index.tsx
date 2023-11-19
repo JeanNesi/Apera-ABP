@@ -16,11 +16,14 @@ import { BrApi } from '../../services/brApi';
 import { applyMask } from '../../utils/functions';
 
 export const Wallet = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [releasesList, setReleasesList] = useState<IReleasesList[]>([]);
 
   const [selectedRelease, setSelectedRelease] = useState<IReleasesList>();
   const [stocksWalletList, setStocksWalletList] = useState<IStocksWalletList[]>([]);
+
+  const [valueApplied, setValueApplied] = useState(0);
+  const [grossBalance, setGrossBalance] = useState(0);
 
   const [selectedTab, setSelectedTab] = useState<ITab>({
     label: 'Saídas',
@@ -35,23 +38,20 @@ export const Wallet = () => {
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
   const [modalEditReleaseIsOpen, setModalEditReleaseIsOpen] = useState(false);
 
+  console.log(stocksWalletList);
+
   //#region Releases API's
 
   async function requestReleasesList() {
-    setLoading(true);
-
     await Api.get(`/release?walletId=1`)
       .then((res) => {
         setReleasesList(res.data);
-        console.log(res.data);
       })
-      .catch(() => toast.error('Algo deu errado'))
-      .finally(() => setLoading(false));
+      .catch(() => toast.error('Algo deu errado'));
+    // .finally(() => setLoading(false));
   }
 
   async function requestDeleteRelease(releaseId: number) {
-    setLoading(true);
-
     await Api.delete(`/release/${releaseId}`)
       .then(() => {
         toast.success('Lançamento deletado com sucesso!');
@@ -65,49 +65,55 @@ export const Wallet = () => {
   async function requestUpdatedStockValues(tickers: string) {
     await BrApi.get(`/quote/${tickers}?token=hXAyiiQ3NhNz1Kp1ciC6pu`)
       .then(({ data }: { data: IStockData }) => {
-        data.results.forEach((element, i) => {
-          setStocksWalletList((prevState) => {
-            const newState = [...prevState];
+        setGrossBalance(0);
+        setStocksWalletList((prevState) => {
+          const updatedState = data.results.map((element, i) => {
+            const regularMarketPrice = Number(element.regularMarketPrice) * 100;
+            const stock = prevState[i];
 
-            newState[i].stockLogoUrl = element.logourl;
+            setGrossBalance((prevState) => prevState + regularMarketPrice * stock.amount);
 
-            newState[i].balance = applyMask({
-              mask: 'BRL',
-              value: String(Number(element.regularMarketPrice) * 100 * newState[i].amount),
-            }).value;
-
-            newState[i].currentPrice = applyMask({
-              mask: 'BRL',
-              value: String(Number((element.regularMarketPrice * 100).toFixed(2))),
-            }).value;
-
-            newState[i].appreciation = Number(
-              (100 - newState[i].averagePrice / element.regularMarketPrice).toFixed(2),
-            );
-
-            return newState;
+            return {
+              ...stock,
+              stockLogoUrl: element.logourl ?? 'https://brapi.dev/favicon.svg',
+              balance: applyMask({ mask: 'BRL', value: String(regularMarketPrice * stock.amount) })
+                .value,
+              currentPrice: applyMask({ mask: 'BRL', value: regularMarketPrice.toFixed(2) }).value,
+              appreciation: Number(
+                (100 - stock.averagePrice / element.regularMarketPrice).toFixed(2),
+              ),
+            };
           });
+
+          return updatedState;
         });
-        setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => setLoading(false))
+      .finally(() => setLoading(false));
   }
 
   async function requestWallet() {
-    // setLoading(true);
+    setLoading(true);
 
     await Api.get(`/release/wallet?walletId=${1}`)
       .then((res) => {
-        setStocksWalletList(res.data);
+        setStocksWalletList(res.data.stocks);
+        setValueApplied(res.data.valueApplied);
 
-        if (res.data.length) {
-          const tickers = res.data.map((element: IStocksWalletList) => element.stock).toString();
+        if (res.data.stocks.length) {
+          const tickers = res.data.stocks
+            .map((element: IStocksWalletList) => element.stock)
+            .toString();
           requestUpdatedStockValues(tickers);
         } else {
           setLoading(false);
         }
       })
       .catch(() => toast.error('Algo deu errado'));
+  }
+
+  function calcVariantion() {
+    return 100 - 100 * (valueApplied / grossBalance);
   }
 
   useEffect(() => {
@@ -122,6 +128,7 @@ export const Wallet = () => {
           setModal={setModalAddNewStockIsOpen}
           callback={() => {
             requestReleasesList();
+            requestWallet();
           }}
         />
       )}
@@ -132,6 +139,7 @@ export const Wallet = () => {
           setModal={setModalEditReleaseIsOpen}
           callback={() => {
             requestReleasesList();
+            requestWallet();
           }}
         />
       )}
@@ -142,9 +150,9 @@ export const Wallet = () => {
         </Style.LoadingContainer>
       )}
 
-      {!loading && true && (
+      {!loading && !stocksWalletList.length && !releasesList.length && (
         <IconButton
-          label="Adicionar ativo"
+          label="Adicionar lançamento"
           icon={icons.plus}
           onClick={() => setModalAddNewStockIsOpen(true)}
           className="p3"
@@ -152,26 +160,27 @@ export const Wallet = () => {
         />
       )}
 
-      {!loading && true && (
+      {!loading && (!!stocksWalletList.length || !!releasesList.length) && (
         <>
           <Style.WalletInfosContainer>
             <Style.WalletInfosWrapper>
               <img src={icons.piggyBank} alt="" />
               <h6>Valor aplicado</h6>
-              <p className="p5">R$ 1.168,07</p>
+              <p className="p5">{applyMask({ mask: 'BRL', value: String(valueApplied) }).value}</p>
             </Style.WalletInfosWrapper>
 
             <Style.WalletInfosWrapper>
               <img src={icons.circleDollar} alt="" />
               <h6>Saldo bruto</h6>
-              <p className="p5">R$ 1.335,97</p>
+              <p className="p5">{applyMask({ mask: 'BRL', value: String(grossBalance) }).value}</p>
             </Style.WalletInfosWrapper>
 
             <Style.WalletInfosWrapper>
               <img src={icons.percent} alt="" />
               <h6>Variação</h6>
-              <Style.VariationValueContainer className="p5" $variation={14.37}>
-                + 14,37%
+              <Style.VariationValueContainer className="p5" $variation={calcVariantion()}>
+                {calcVariantion() > 0 ? '+ ' : ''}
+                {calcVariantion().toFixed(2)}%
               </Style.VariationValueContainer>
             </Style.WalletInfosWrapper>
 
@@ -185,7 +194,7 @@ export const Wallet = () => {
 
           <Style.ButtonsContainer>
             <IconButton
-              label="Adicionar ativo"
+              label="Adicionar lançamento"
               icon={icons.plus}
               onClick={() => setModalAddNewStockIsOpen(true)}
               className="p3"
@@ -197,8 +206,9 @@ export const Wallet = () => {
             <Style.TabsHeader>
               {tabOptions.map((category) => (
                 <Style.Tab
-                  activeTab={selectedTab.value}
-                  tab={category}
+                  key={category.value}
+                  $activeTab={selectedTab.value}
+                  $tab={category}
                   onClick={() => {
                     setSelectedTab(category);
                   }}
@@ -211,9 +221,11 @@ export const Wallet = () => {
         </>
       )}
 
-      {selectedTab.value === 'wallet' && <ReleaseSummary stocksWalletList={stocksWalletList} />}
+      {selectedTab.value === 'wallet' && !loading && !!stocksWalletList.length && (
+        <ReleaseSummary stocksWalletList={stocksWalletList} />
+      )}
 
-      {selectedTab.value === 'releases' && (
+      {selectedTab.value === 'releases' && !loading && !!releasesList.length && (
         <Releases
           releasesList={releasesList}
           onEditClick={(release) => {
@@ -224,7 +236,7 @@ export const Wallet = () => {
         />
       )}
 
-      {!loading && false && (
+      {!loading && !stocksWalletList.length && !releasesList.length && (
         <Style.NoResultsContainer>
           <img src={icons.finance} alt="" />
           <h5>Sua carteira está vazia!</h5>

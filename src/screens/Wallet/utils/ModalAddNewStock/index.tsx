@@ -17,7 +17,9 @@ import { toast } from 'react-toastify';
 export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
   const [onQuery, setOnQuery] = useState(false);
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
-  const [selectedTransactionType, setSelectedTransactionType] = useState<'buy' | 'sale'>('buy');
+  const [selectedTransactionType, setSelectedTransactionType] = useState<'COMPRA' | 'VENDA'>(
+    'COMPRA',
+  );
 
   const schema = yup.object({
     stock: yup.string().required('Selecione uma ação.'),
@@ -28,7 +30,6 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
   });
 
   async function addStock(data: IFormData) {
-    console.log('aaaaaaaaaaaa');
     const selectedStockInfos = stocksList.find((stock) => stock.stock === data.stock);
     await Api.post(`/release`, {
       amount: Number(unMask(data.amount)),
@@ -39,7 +40,7 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
       },
       extraCosts: Number(unMask(data.otherCosts)),
       price: Number(unMask(data.value)),
-      releaseType: 'COMPRA',
+      releaseType: selectedTransactionType,
       wallet: {
         id: 1,
       },
@@ -85,9 +86,9 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
     <Modal title="Adicionar Transação" setModal={() => setModal(false)}>
       <Style.TransactionTypesContainer>
         <Style.TransactionTypeButton
-          $isSelected={selectedTransactionType === 'buy'}
+          $isSelected={selectedTransactionType === 'COMPRA'}
           $type="buy"
-          onClick={() => setSelectedTransactionType('buy')}
+          onClick={() => setSelectedTransactionType('COMPRA')}
         >
           <p className="p3">Compra</p>
           <svg
@@ -105,9 +106,9 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
         </Style.TransactionTypeButton>
 
         <Style.TransactionTypeButton
-          $isSelected={selectedTransactionType === 'sale'}
+          $isSelected={selectedTransactionType === 'VENDA'}
           $type="sale"
-          onClick={() => setSelectedTransactionType('sale')}
+          onClick={() => setSelectedTransactionType('VENDA')}
         >
           <p className="p3">Venda</p>
           <svg
@@ -154,7 +155,7 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
                 const stockValue = (
                   (stocksList.find((stock) => stock.stock === evt.value)?.close ?? 0) * 100
                 )?.toFixed(2);
-                console.log(stockValue);
+
                 setFieldValue('value', applyMask({ mask: 'BRL', value: stockValue ?? '' }).value);
                 setFieldValue('stock', evt.value);
               }}
@@ -163,7 +164,7 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
             <Style.InputsWrapper>
               <FormikInput
                 name="buyDate"
-                label={selectedTransactionType === 'buy' ? 'Data da compra' : 'Data da venda'}
+                label={selectedTransactionType === 'COMPRA' ? 'Data da compra' : 'Data da venda'}
                 type="date"
                 placeholder="Ex: joao.silva@satc.com"
                 value={values.buyDate}

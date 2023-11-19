@@ -72,8 +72,11 @@ export const applyMask = ({
       };
       break;
     case 'BRL':
+      let formatedValue = value.split('.');
+      formatedValue = formatedValue.map((element) => element.replace(/[^0-9]*/g, ''));
+
       Mask = {
-        value: (Number(value) / 100).toLocaleString('pt-br', {
+        value: (Number(formatedValue.join('.')) / 100).toLocaleString('pt-br', {
           style: 'currency',
           currency: 'BRL',
         }),

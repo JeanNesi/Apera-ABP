@@ -113,7 +113,7 @@ export const TabsHeader = styled.div`
   display: flex;
 `;
 
-export const Tab = styled.div<{ activeTab: string; tab: ITab }>`
+export const Tab = styled.div<{ $activeTab: string; $tab: ITab }>`
   height: 28px;
   display: flex;
   justify-content: center;
@@ -136,8 +136,8 @@ export const Tab = styled.div<{ activeTab: string; tab: ITab }>`
     transition: 0.4s;
   }
 
-  ${({ tab, activeTab }) =>
-    tab.value === activeTab &&
+  ${({ $tab, $activeTab }) =>
+    $tab.value === $activeTab &&
     css`
       &::after {
         width: 100%;

@@ -18,9 +18,9 @@ export const ReleaseSummary = ({ stocksWalletList }: IReleaseSummary) => {
         { label: 'Saldo' },
       ]}
     >
-      {stocksWalletList.map((stock) => (
+      {stocksWalletList.map((stock, i) => (
         <TableContent
-          key={stock.id}
+          key={`${stock.id}-${i}`}
           colsBody={[
             {
               cell: (

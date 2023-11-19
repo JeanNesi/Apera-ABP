@@ -32,7 +32,6 @@ export const ModalEditRelease = ({ setModal, callback, releaseDetails }: IModalE
   });
 
   async function addStock(data: IFormData) {
-    console.log('aaaaaaaaaaaa');
     const selectedStockInfos = stocksList.find((stock) => stock.stock === data.stock.value);
     await Api.put(`/release/${releaseDetails.id}`, {
       id: releaseDetails.id,
@@ -168,7 +167,7 @@ export const ModalEditRelease = ({ setModal, callback, releaseDetails }: IModalE
                 const stockValue = (
                   (stocksList.find((stock) => stock.stock === evt.value)?.close ?? 0) * 100
                 )?.toFixed(2);
-                console.log(stockValue);
+
                 setFieldValue('value', applyMask({ mask: 'BRL', value: stockValue ?? '' }).value);
                 setFieldValue('stock', evt);
               }}

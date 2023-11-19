@@ -33,7 +33,6 @@ export const Login = () => {
     await Api.get('/login')
       .then(({ data }: { data: ILoginData[] }) => {
         const loginAccount = data.find((login) => login.email === formData.email);
-        console.log(data);
 
         if (loginAccount && loginAccount.password === formData.password) {
           navigate('/home');
