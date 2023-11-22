@@ -23,10 +23,13 @@ export const Navbar = () => {
       <Style.NavbarContainer>
         <Style.NavbarContent>
           <Style.LeftSide>
-            <IconButton
-              icon={icons.hamburgerMenu}
-              onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
-            />
+            {(localStorage.getItem('authToken') || user) && (
+              <IconButton
+                icon={icons.hamburgerMenu}
+                onClick={() => setSidebarIsOpen(!sidebarIsOpen)}
+              />
+            )}
+
             <Link to="/home">
               <img src={icons.aperaLogo} alt="" />
             </Link>

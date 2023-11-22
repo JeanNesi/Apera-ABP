@@ -33,11 +33,13 @@ export const InputWrapper = styled.div`
 
 export const LoginContainer = styled.div`
   width: 100%;
-  max-width: 364px;
+  max-width: 400px;
 
   display: flex;
   flex-direction: column;
   margin-top: ${theme.size.xxxxlg};
+  box-shadow: 2px 2px 12px 2px rgba(0, 0, 0, 0.15);
+  padding: ${theme.size.md};
 
   img {
     width: 130px;

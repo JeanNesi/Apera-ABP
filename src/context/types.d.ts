@@ -7,5 +7,5 @@ export interface IUser {
 
 export interface IAuthContext {
   user: IUser | null;
-  setUser: (setUser: IUser) => void;
+  setUser: (setUser: IUser | null) => void;
 }

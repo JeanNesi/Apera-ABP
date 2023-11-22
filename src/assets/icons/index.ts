@@ -25,10 +25,16 @@ import circleDollar from './circleDollar.svg';
 import percent from './percent.svg';
 import scroll from './scroll.svg';
 import pencil from './pencil.svg';
+import house from './house.svg';
+import user from './user.svg';
+import password from './password.svg';
 
 export const icons = {
   downArrow,
+  password,
   pencil,
+  user,
+  house,
   circleDollar,
   percent,
   piggyBank,

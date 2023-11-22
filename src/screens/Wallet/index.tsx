@@ -43,7 +43,7 @@ export const Wallet = () => {
   //#region Releases API's
 
   async function requestReleasesList() {
-    await Api.get(`/release?walletId=1`)
+    await Api.get(`/release?walletId=${1}`)
       .then((res) => {
         setReleasesList(res.data);
       })

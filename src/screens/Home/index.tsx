@@ -167,7 +167,7 @@ export const Home = () => {
                         $percentage={stockData?.regularMarketChangePercent ?? 0}
                       >
                         {(stockData?.regularMarketChangePercent ?? 0) > 0 && '+'}
-                        {(stockData?.regularMarketChangePercent ?? 0) < 0 && '-'}
+
                         {stockData?.regularMarketChangePercent.toFixed(2)}
                       </Style.StockVariantionPercentage>
                       <p className="p8">Variação (Dia)</p>

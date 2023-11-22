@@ -14,7 +14,9 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
 
   async function validateToken() {
-    await Api.get(`/login/${localStorage.getItem('authToken')}`)
+    await Api.get(
+      `https://64976b1383d4c69925a3a538.mockapi.io/api/login/${localStorage.getItem('authToken')}`,
+    )
       .then(({ data }: { data: IUser }) => {
         setLoading(false);
         setUser({
@@ -33,14 +35,14 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
           localStorage.clear();
           return setLoading(false);
         }
-        // navigate('/home');
-        // toast.error('Token inválido ou expirado!');
+        navigate('/home');
+        toast.error('Token inválido ou expirado!');
       });
   }
 
   useEffect(() => {
-    // if (!localStorage.getItem('authToken') && location.pathname !== '/home')
-    //   return navigate('/login');
+    if (!localStorage.getItem('authToken') && location.pathname !== '/home')
+      return navigate('/login');
 
     validateToken();
   }, [location.pathname]);

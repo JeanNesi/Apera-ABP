@@ -12,27 +12,38 @@ import * as Style from './styles';
 import { theme } from '../../../styles/theme';
 import { icons } from '../../../assets/icons';
 
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
-import { IFormData } from './types';
+import { IFormData, ITab } from './types';
+import { applyMask } from '../../../utils/functions';
+import { FormikSelect } from '../../../components/Form/FormikSelect';
+
+const schema = yup.object({
+  name: yup.string().required('Campo obrigatório!'),
+  email: yup.string().email('E-mail inválido!').required('Campo obrigatório!'),
+  password: yup
+    .string()
+    .required('Campo obrigatório!')
+    .min(8, 'Sua senha deve ter no minimo 8 caracteres'),
+  confirmPassword: yup
+    .string()
+    .required('Campo obrigatório!')
+    .oneOf([yup.ref('password')], 'Senhas não conferem!'),
+});
 
 export const SignUp = () => {
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
-
-  const schema = yup.object({
-    name: yup.string().required('Campo obrigatório!'),
-    email: yup.string().email('E-mail inválido!').required('Campo obrigatório!'),
-    password: yup
-      .string()
-      .required('Campo obrigatório!')
-      .min(8, 'Sua senha deve ter no minimo 8 caracteres'),
-    confirmPassword: yup
-      .string()
-      .required('Campo obrigatório!')
-      .oneOf([yup.ref('password')], 'Senhas não conferem!'),
+  const [selectedTab, setSelectedTab] = useState<ITab>({
+    label: 'Pessoa',
+    value: 'person',
   });
+
+  const tabOptions: ITab[] = [
+    { label: 'Pessoa', value: 'person' },
+    { label: 'Empresa', value: 'company' },
+  ];
 
   async function createUserAccount(data: IFormData) {
     setOnQuery(true);
@@ -56,26 +67,154 @@ export const SignUp = () => {
     <Style.Background>
       <Formik
         validationSchema={schema}
-        initialValues={{ name: '', email: '', password: '', confirmPassword: '' }}
+        initialValues={{
+          name: '',
+          email: '',
+          birthDate: '',
+          cnpj: '',
+          corporateReason: '',
+          fantasy_name: '',
+          gender: '',
+          cpf: '',
+          phoneNumber: '',
+          password: '',
+          confirmPassword: '',
+        }}
         validateOnChange={true}
         onSubmit={async (data: IFormData) => {
           createUserAccount(data);
         }}
       >
-        {({ errors, values, touched }) => (
+        {({ errors, values, touched, setFieldValue }) => (
           <>
             <Style.LoginContainer>
               <Form>
                 <Style.InputWrapper>
-                  <img src={icons.aperaLogo} alt="" />
+                  <Link to="/home">
+                    <img src={icons.aperaLogo} alt="" />
+                  </Link>
+
+                  <Style.TabsContainer>
+                    <Style.TabsHeader>
+                      {tabOptions.map((category) => (
+                        <Style.Tab
+                          key={category.value}
+                          $activeTab={selectedTab.value}
+                          $tab={category}
+                          onClick={() => {
+                            setSelectedTab(category);
+                          }}
+                        >
+                          <h6>{category.label}</h6>
+                        </Style.Tab>
+                      ))}
+                    </Style.TabsHeader>
+                  </Style.TabsContainer>
+
+                  {selectedTab.value === 'company' && (
+                    <>
+                      <FormikInput
+                        name="fantasy_name"
+                        label="Nome fantasia"
+                        labelColor="#fff"
+                        placeholder="Ex: Apera"
+                        value={values.fantasy_name}
+                        error={
+                          touched.fantasy_name && errors.fantasy_name ? errors.fantasy_name : null
+                        }
+                      />
+
+                      <FormikInput
+                        name="cnpj"
+                        label="CNPJ"
+                        labelColor="#fff"
+                        placeholder="Ex: 00.000.000/0000-00"
+                        value={values.cnpj}
+                        error={touched.cnpj && errors.cnpj ? errors.cnpj : null}
+                        maxLength={18}
+                        onChange={(evt) =>
+                          setFieldValue(
+                            'cnpj',
+                            applyMask({ mask: 'CNPJ', value: evt.target.value }).value,
+                          )
+                        }
+                      />
+
+                      <FormikInput
+                        name="corporateReason"
+                        label="Razão social"
+                        labelColor="#fff"
+                        placeholder="Ex: Apera Finanças LTDA"
+                        value={values.corporateReason}
+                        error={
+                          touched.corporateReason && errors.corporateReason
+                            ? errors.corporateReason
+                            : null
+                        }
+                      />
+                    </>
+                  )}
+
+                  {selectedTab.value === 'person' && (
+                    <>
+                      <FormikInput
+                        name="name"
+                        label="Nome"
+                        labelColor="#fff"
+                        placeholder="Ex: João Silva"
+                        value={values.name}
+                        error={touched.name && errors.name ? errors.name : null}
+                      />
+
+                      <FormikInput
+                        name="cpf"
+                        label="CPF"
+                        labelColor="#fff"
+                        placeholder="Ex: 111.222.333-44"
+                        value={values.cpf}
+                        error={touched.cpf && errors.cpf ? errors.cpf : null}
+                        maxLength={14}
+                        onChange={(evt) =>
+                          setFieldValue(
+                            'cpf',
+                            applyMask({ mask: 'CPF', value: evt.target.value }).value,
+                          )
+                        }
+                      />
+
+                      <FormikInput
+                        name="birthDate"
+                        type="date"
+                        label="Data de nascimento"
+                        labelColor="#fff"
+                        value={values.birthDate}
+                        error={touched.birthDate && errors.birthDate ? errors.birthDate : null}
+                      />
+
+                      <FormikSelect name="gender" label="Sexo">
+                        <option value="masc">Masculino</option>
+                        <option value="fem">Feminino</option>
+                        <option value="nf">Não informado</option>
+                      </FormikSelect>
+                    </>
+                  )}
+
                   <FormikInput
-                    name="name"
-                    label="Nome"
+                    name="phoneNumber"
+                    label="Telefone"
                     labelColor="#fff"
-                    placeholder="Ex: João Silva"
-                    value={values.name}
-                    error={touched.name && errors.name ? errors.name : null}
+                    placeholder="Ex: (48) 99999-9999"
+                    value={values.phoneNumber}
+                    error={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : null}
+                    maxLength={15}
+                    onChange={(evt) =>
+                      setFieldValue(
+                        'phoneNumber',
+                        applyMask({ mask: 'TEL', value: evt.target.value }).value,
+                      )
+                    }
                   />
+
                   <FormikInput
                     name="email"
                     label="E-mail"

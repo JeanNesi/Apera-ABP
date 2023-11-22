@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
 import { Button } from '../../../components/Buttons/Button';
@@ -14,8 +14,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { IFormData, ILoginData } from './type';
+import { AuthContext } from '../../../context/AuthContext';
 
 export const Login = () => {
+  const { setUser } = useContext(AuthContext);
   const navigate = useNavigate();
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
@@ -26,11 +28,12 @@ export const Login = () => {
 
   useEffect(() => {
     localStorage.clear();
+    setUser(null);
   }, []);
 
   async function requestUserLogin(formData: IFormData) {
     setOnQuery(true);
-    await Api.get('/login')
+    await Api.get('https://64976b1383d4c69925a3a538.mockapi.io/api/login')
       .then(({ data }: { data: ILoginData[] }) => {
         const loginAccount = data.find((login) => login.email === formData.email);
 

@@ -14,11 +14,16 @@ import { Api } from '../../services/api';
 import { toast } from 'react-toastify';
 import { IFormData } from './types';
 import { ModalDeleteAccount } from './utils/ModalDeleteAccount';
+import { useNavigate } from 'react-router-dom';
+import { applyMask, dateToISOString } from '../../utils/functions';
+import { FormikSelect } from '../../components/Form/FormikSelect';
+import { IconButton } from '../../components/Buttons/IconButton';
+import { icons } from '../../assets/icons';
 
 export const Settings = () => {
+  const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
 
-  const [edit, setEdit] = useState<boolean>(false);
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const [modalDeleteAccountIsOpen, setModalDeleteAccountIsOpen] = useState<boolean>(false);
@@ -41,7 +46,7 @@ export const Settings = () => {
     })
       .then(() => {
         setOnQuery(false);
-        setEdit(false);
+
         toast.success('Informações alteradas com sucesso!');
         setUser({
           id: user?.id ?? '',
@@ -61,112 +66,161 @@ export const Settings = () => {
       {modalDeleteAccountIsOpen && <ModalDeleteAccount setModal={setModalDeleteAccountIsOpen} />}
 
       <Style.Background>
-        <Formik
-          validationSchema={schema}
-          initialValues={{
-            name: user?.name ?? '',
-            email: user?.email ?? '',
-            password: '',
-            confirmPassword: '',
-          }}
-          onSubmit={async (data: IFormData) => {
-            editUserInfos(data);
-          }}
-        >
-          {({ errors, values, touched }) => (
-            <>
-              <Style.LoginContainer>
+        <Style.Card>
+          <Style.CardLeftSide>
+            <Style.ImageContainer>
+              <Style.UserImage src={user?.profilePicture} alt="" />
+            </Style.ImageContainer>
+
+            <Style.MenuButtonsContainer>
+              <Style.SignoutButtonContainer>
+                <IconButton
+                  className="p6"
+                  labelPos="right"
+                  icon={icons.user}
+                  label="Dados pessoais"
+                  color={theme.color.white}
+                  onClick={() => ''}
+                />
+              </Style.SignoutButtonContainer>
+
+              <Style.SignoutButtonContainer>
+                <IconButton
+                  className="p6"
+                  icon={icons.house}
+                  labelPos="right"
+                  label="Endereço"
+                  color={theme.color.white}
+                  onClick={() => ''}
+                />
+              </Style.SignoutButtonContainer>
+
+              <Style.SignoutButtonContainer>
+                <IconButton
+                  className="p6"
+                  icon={icons.password}
+                  labelPos="right"
+                  label="Alterar Senha"
+                  color={theme.color.white}
+                  onClick={() => ''}
+                />
+              </Style.SignoutButtonContainer>
+            </Style.MenuButtonsContainer>
+
+            <Style.SignoutButtonContainer>
+              <IconButton
+                icon={icons.power}
+                label="Sair"
+                labelPos="right"
+                color={theme.color.white}
+                onClick={() => navigate('/login')}
+              />
+            </Style.SignoutButtonContainer>
+          </Style.CardLeftSide>
+
+          <Formik
+            validationSchema={schema}
+            initialValues={{
+              name: 'Apera',
+              email: 'apera@gmail.com',
+              birthDate: dateToISOString(new Date()),
+              cnpj: '00.000.000/0001-22',
+              corporateReason: 'Apera LTDA',
+              fantasy_name: 'Apera',
+              gender: '',
+              cpf: '123.456.789-10',
+              phoneNumber: '(48) 99999-9999',
+              password: '',
+              confirmPassword: '',
+            }}
+            validateOnChange={true}
+            onSubmit={async (data: IFormData) => {
+              editUserInfos(data);
+            }}
+          >
+            {({ errors, values, touched, setFieldValue }) => (
+              <>
                 <Form>
-                  <Style.ImageContainer>
-                    <Style.UserImage src={user?.profilePicture} alt="" />
-                  </Style.ImageContainer>
                   <Style.InputWrapper>
                     <FormikInput
                       name="name"
                       label="Nome"
+                      labelColor="#fff"
                       placeholder="Ex: João Silva"
-                      disabled={!edit}
                       value={values.name}
                       error={touched.name && errors.name ? errors.name : null}
                     />
+
+                    <FormikInput
+                      name="cpf"
+                      label="CPF"
+                      labelColor="#fff"
+                      placeholder="Ex: 111.222.333-44"
+                      value={values.cpf}
+                      error={touched.cpf && errors.cpf ? errors.cpf : null}
+                      maxLength={14}
+                      onChange={(evt) =>
+                        setFieldValue(
+                          'cpf',
+                          applyMask({ mask: 'CPF', value: evt.target.value }).value,
+                        )
+                      }
+                    />
+
+                    <FormikInput
+                      name="birthDate"
+                      type="date"
+                      label="Data de nascimento"
+                      labelColor="#fff"
+                      value={values.birthDate}
+                      error={touched.birthDate && errors.birthDate ? errors.birthDate : null}
+                    />
+
+                    <FormikSelect name="gender" label="Sexo">
+                      <option value="masc">Masculino</option>
+                      <option value="fem">Feminino</option>
+                      <option value="nf">Não informado</option>
+                    </FormikSelect>
+
+                    <FormikInput
+                      name="phoneNumber"
+                      label="Telefone"
+                      labelColor="#fff"
+                      placeholder="Ex: (48) 99999-9999"
+                      value={values.phoneNumber}
+                      error={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : null}
+                      maxLength={15}
+                      onChange={(evt) =>
+                        setFieldValue(
+                          'phoneNumber',
+                          applyMask({ mask: 'TEL', value: evt.target.value }).value,
+                        )
+                      }
+                    />
+
                     <FormikInput
                       name="email"
                       label="E-mail"
-                      disabled={!edit}
+                      labelColor="#fff"
                       placeholder="Ex: joao.silva@satc.com"
                       value={values.email}
                       error={touched.email && errors.email ? errors.email : null}
                     />
-
-                    {edit && (
-                      <>
-                        <FormikInput
-                          name="password"
-                          label="Senha"
-                          type="password"
-                          value={values.password}
-                          placeholder="Insira sua senha"
-                          error={touched.password && errors.password ? errors.password : null}
-                        />
-
-                        <FormikInput
-                          name="confirmPassword"
-                          label="Confirme sua senha"
-                          labelColor="#fff"
-                          type="password"
-                          value={values.confirmPassword}
-                          placeholder="Confirme sua senha"
-                          error={
-                            touched.confirmPassword && errors.confirmPassword
-                              ? errors.confirmPassword
-                              : null
-                          }
-                        />
-                      </>
-                    )}
                   </Style.InputWrapper>
-
-                  <Style.ButtonsContainer>
-                    {edit && (
-                      <Button
-                        fullWidth
-                        center
-                        label="Salvar"
-                        loading={onQuery}
-                        type="submit"
-                        color={theme.color.primary}
-                        bgColor={theme.color.success}
-                      />
-                    )}
-
-                    <Button
-                      fullWidth
-                      center
-                      label={edit ? 'Cancelar' : 'Alterar dados'}
-                      disable={onQuery}
-                      type="button"
-                      color={theme.color.primary}
-                      bgColor={theme.color.success}
-                      outlined
-                      onClick={() => setEdit(!edit)}
-                    />
-
-                    <Button
-                      fullWidth
-                      center
-                      borderless
-                      label="Excluir conta"
-                      disable={onQuery}
-                      type="button"
-                      outlined
-                      onClick={() => setModalDeleteAccountIsOpen(true)}
-                    />
-                  </Style.ButtonsContainer>
+                  <Button
+                    fullWidth
+                    center
+                    label="Salvar"
+                    loading={onQuery}
+                    type="submit"
+                    color={theme.color.primary}
+                    bgColor={theme.color.success}
+                  />
                 </Form>
-              </Style.LoginContainer>
-            </>
-          )}
-        </Formik>
+              </>
+            )}
+          </Formik>
+        </Style.Card>
       </Style.Background>
     </>
   );
