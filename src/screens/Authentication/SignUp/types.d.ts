@@ -1,7 +1,8 @@
 export interface IFormData {
   name: string;
+  userName: string;
   corporateReason: string;
-  fantasy_name: string;
+  fantasyName: string;
   email: string;
   cpf: string;
   cnpj: string;

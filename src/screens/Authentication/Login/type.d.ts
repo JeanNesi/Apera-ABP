@@ -4,8 +4,10 @@ export interface IFormData {
 }
 
 interface ILoginData {
+  accessToken: string;
   email: string;
-  id: string;
-  name: string;
-  password: string;
+  id: number;
+  refreshToken: string;
+  roles: string[];
+  username: string;
 }

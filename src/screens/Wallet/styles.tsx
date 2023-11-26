@@ -67,8 +67,8 @@ export const WalletInfosWrapper = styled.div`
   min-width: 250px;
 
   grid-template-areas:
-    'a b'
-    'a c';
+    'a b d'
+    'a c d';
   gap: ${theme.size.xsm};
   grid-gap: ${theme.size.xsm};
   box-shadow: 2px 2px 12px 2px rgba(0, 0, 0, 0.15);
@@ -77,7 +77,19 @@ export const WalletInfosWrapper = styled.div`
     grid-area: a;
   }
 
-  img {
+  :nth-child(2) {
+    grid-area: b;
+  }
+
+  :nth-child(3) {
+    grid-area: c;
+  }
+
+  :nth-child(4) {
+    grid-area: d;
+  }
+
+  > img {
     width: 24px;
     height: 24px;
   }
@@ -154,4 +166,10 @@ export const Tab = styled.div<{ $activeTab: string; $tab: ITab }>`
       width: 100%;
     }
   }
+`;
+
+export const WalletButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
 `;

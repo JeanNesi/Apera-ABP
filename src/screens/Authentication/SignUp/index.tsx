@@ -16,11 +16,28 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { IFormData, ITab } from './types';
-import { applyMask } from '../../../utils/functions';
+import { applyMask, catchHandler, unMask } from '../../../utils/functions';
 import { FormikSelect } from '../../../components/Form/FormikSelect';
 
-const schema = yup.object({
+const schemaPerson = yup.object({
+  userName: yup.string().required('Campo obrigatório!'),
   name: yup.string().required('Campo obrigatório!'),
+  cpf: yup.string().min(14, 'CPF inválido.').required('Campo obrigatório!'),
+  email: yup.string().email('E-mail inválido!').required('Campo obrigatório!'),
+  password: yup
+    .string()
+    .required('Campo obrigatório!')
+    .min(8, 'Sua senha deve ter no minimo 8 caracteres'),
+  confirmPassword: yup
+    .string()
+    .required('Campo obrigatório!')
+    .oneOf([yup.ref('password')], 'Senhas não conferem!'),
+});
+
+const schemaCompany = yup.object({
+  userName: yup.string().required('Campo obrigatório!'),
+  fantasyName: yup.string().required('Campo obrigatório!'),
+  cnpj: yup.string().min(14, 'CPF inválido.').required('Campo obrigatório!'),
   email: yup.string().email('E-mail inválido!').required('Campo obrigatório!'),
   password: yup
     .string()
@@ -47,18 +64,34 @@ export const SignUp = () => {
 
   async function createUserAccount(data: IFormData) {
     setOnQuery(true);
-    await Api.post('/login', {
-      name: data.name,
-      email: data.email,
-      password: data.password,
+    await Api.post('/userRegistration/company', {
+      address: {
+        cep: null,
+        city: null,
+        complement: null,
+        id: null,
+        neighborhood: null,
+        number: null,
+        street: null,
+        uf: null,
+      },
+      cnpj: unMask(data.cnpj),
+      corporateReason: data.corporateReason,
+      fantasyName: data.fantasyName,
+      phoneNumber: unMask(data.phoneNumber),
+      user: {
+        username: data.userName,
+        email: data.email,
+        password: data.password,
+      },
     })
       .then(() => {
         toast.success('Cadastro realizado com sucesso!');
         navigate('/login');
         setOnQuery(false);
       })
-      .catch(() => {
-        toast.success('Algo deu errado!');
+      .catch((error) => {
+        catchHandler(error);
         setOnQuery(false);
       });
   }
@@ -66,14 +99,15 @@ export const SignUp = () => {
   return (
     <Style.Background>
       <Formik
-        validationSchema={schema}
+        validationSchema={selectedTab.value === 'person' ? schemaPerson : schemaCompany}
         initialValues={{
           name: '',
           email: '',
           birthDate: '',
           cnpj: '',
+          userName: '',
           corporateReason: '',
-          fantasy_name: '',
+          fantasyName: '',
           gender: '',
           cpf: '',
           phoneNumber: '',
@@ -114,13 +148,13 @@ export const SignUp = () => {
                   {selectedTab.value === 'company' && (
                     <>
                       <FormikInput
-                        name="fantasy_name"
+                        name="fantasyName"
                         label="Nome fantasia"
                         labelColor="#fff"
                         placeholder="Ex: Apera"
-                        value={values.fantasy_name}
+                        value={values.fantasyName}
                         error={
-                          touched.fantasy_name && errors.fantasy_name ? errors.fantasy_name : null
+                          touched.fantasyName && errors.fantasyName ? errors.fantasyName : null
                         }
                       />
 
@@ -213,6 +247,15 @@ export const SignUp = () => {
                         applyMask({ mask: 'TEL', value: evt.target.value }).value,
                       )
                     }
+                  />
+
+                  <FormikInput
+                    name="userName"
+                    label="Nome de usuário"
+                    labelColor="#fff"
+                    placeholder="Ex: apera.ltda"
+                    value={values.userName}
+                    error={touched.userName && errors.userName ? errors.userName : null}
                   />
 
                   <FormikInput

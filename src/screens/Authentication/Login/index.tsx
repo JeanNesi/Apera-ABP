@@ -11,10 +11,10 @@ import { theme } from '../../../styles/theme';
 import { icons } from '../../../assets/icons';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { Api } from '../../../services/api';
 import { IFormData, ILoginData } from './type';
 import { AuthContext } from '../../../context/AuthContext';
+import { catchHandler } from '../../../utils/functions';
 
 export const Login = () => {
   const { setUser } = useContext(AuthContext);
@@ -22,7 +22,7 @@ export const Login = () => {
   const [onQuery, setOnQuery] = useState<boolean>(false);
 
   const schema = yup.object({
-    email: yup.string().email('E-mail inválido!').required('Digite seu e-mail'),
+    // email: yup.string().email('E-mail inválido!').required('Digite seu e-mail'),
     password: yup.string().required('Digite sua senha'),
   });
 
@@ -33,21 +33,21 @@ export const Login = () => {
 
   async function requestUserLogin(formData: IFormData) {
     setOnQuery(true);
-    await Api.get('https://64976b1383d4c69925a3a538.mockapi.io/api/login')
-      .then(({ data }: { data: ILoginData[] }) => {
-        const loginAccount = data.find((login) => login.email === formData.email);
-
-        if (loginAccount && loginAccount.password === formData.password) {
-          navigate('/home');
-          localStorage.setItem('authToken', loginAccount.id);
-        } else {
-          toast.error('E-mail ou senha incorreto!');
-        }
+    await Api.post('/auth/signin', {
+      password: formData.password,
+      username: formData.email,
+    })
+      .then(({ data }: { data: ILoginData }) => {
+        navigate('/home');
+        localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
+        localStorage.setItem('userId', String(data.id));
 
         setOnQuery(false);
       })
-      .catch(() => {
-        toast.success('Algo deu errado!');
+      .catch((error) => {
+        catchHandler(error);
+
         setOnQuery(false);
       });
   }

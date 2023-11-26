@@ -38,7 +38,7 @@ const AppRoutes = () => (
           }
         >
           <Route path="/dashboard/:stockName" element={<Dashboard />} />
-          <Route path="/wallet" element={<Wallet />} />
+          <Route path="/wallet/:walletId" element={<Wallet />} />
           <Route path="/settings" element={<Settings />} />
         </Route>
       </Routes>

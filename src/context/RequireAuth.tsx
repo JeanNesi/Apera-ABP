@@ -4,7 +4,7 @@ import { AuthContext } from './AuthContext';
 import { Api } from '../services/api';
 import { toast } from 'react-toastify';
 import { DotLoading } from '../components/DotLoading';
-import { IUser } from './types';
+import { IValidateTokenData } from './types';
 import { LoadingContainer } from './styles';
 
 export const RequireAuth = ({ children }: { children: JSX.Element }) => {
@@ -14,25 +14,19 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   const location = useLocation();
 
   async function validateToken() {
-    await Api.get(
-      `https://64976b1383d4c69925a3a538.mockapi.io/api/login/${localStorage.getItem('authToken')}`,
-    )
-      .then(({ data }: { data: IUser }) => {
+    await Api.post(`/auth/refreshtoken`, {
+      refreshToken: localStorage.getItem('refreshToken'),
+    })
+      .then(({ data }: { data: IValidateTokenData }) => {
         setLoading(false);
-        setUser({
-          id: data.id,
-          name: data.name,
-          email: data.email,
-          profilePicture: `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
-        });
-        localStorage.setItem(
-          'profilePicture',
-          `https://api.dicebear.com/6.x/initials/svg?seed=${data.name}&backgroundColor=4FE24C&textColor=ffffff`,
-        );
+
+        localStorage.setItem('authToken', data.accessToken);
+        localStorage.setItem('refreshToken', data.refreshToken);
       })
       .catch(() => {
         if (location.pathname === '/home') {
           localStorage.clear();
+          setUser(null);
           return setLoading(false);
         }
         navigate('/home');
@@ -41,11 +35,11 @@ export const RequireAuth = ({ children }: { children: JSX.Element }) => {
   }
 
   useEffect(() => {
-    if (!localStorage.getItem('authToken') && location.pathname !== '/home')
-      return navigate('/login');
+    // if (!localStorage.getItem('authToken') && location.pathname !== '/home')
+    //   return navigate('/login');
 
     validateToken();
-  }, [location.pathname]);
+  }, []);
 
   return loading ? (
     <LoadingContainer>

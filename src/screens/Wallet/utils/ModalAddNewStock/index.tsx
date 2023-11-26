@@ -13,9 +13,11 @@ import { applyMask, dateToISOString, unMask } from '../../../../utils/functions'
 import * as yup from 'yup';
 import { Api } from '../../../../services/api';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
   const [onQuery, setOnQuery] = useState(false);
+  const { walletId } = useParams<{ walletId: string }>();
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [selectedTransactionType, setSelectedTransactionType] = useState<'COMPRA' | 'VENDA'>(
     'COMPRA',
@@ -42,7 +44,7 @@ export const ModalAddNewStock = ({ setModal, callback }: IModalAddNewStock) => {
       price: Number(unMask(data.value)),
       releaseType: selectedTransactionType,
       wallet: {
-        id: 1,
+        id: walletId,
       },
     })
       .then(() => {

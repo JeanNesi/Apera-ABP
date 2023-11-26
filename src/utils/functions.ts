@@ -1,4 +1,5 @@
-import { IMask } from './types';
+import { toast } from 'react-toastify';
+import { ICatchHandler, IMask } from './types';
 
 export function formatCurrencyBRL(value: number) {
   return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -101,4 +102,15 @@ export const unMask = (value: string) => value.replace(/[^a-zA-Z0-9]/g, '').repl
 
 export function dateToISOString(date: Date) {
   return new Date(date).toISOString().substring(0, 10);
+}
+
+export function catchHandler(err: ICatchHandler) {
+  toast.dismiss();
+  if (err.response?.data) {
+    if (err.response.data.message) toast.error(err.response.data.message);
+    else if (err.response?.data) toast.error(err.response.data.message);
+    else toast.error(`Erro: ${err.response.status}`);
+  } else {
+    toast.error('Erro de comunicação');
+  }
 }

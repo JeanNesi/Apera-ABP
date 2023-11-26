@@ -14,8 +14,12 @@ import { ModalAddNewStock } from './utils/ModalAddNewStock';
 import { ModalEditRelease } from './utils/ModalEditRelease';
 import { BrApi } from '../../services/brApi';
 import { applyMask } from '../../utils/functions';
+import { useParams } from 'react-router-dom';
+import { ModalCreateWallet } from './utils/ModalCreateWallet';
+import { ModalEditWallet } from './utils/ModalEditWallet';
 
 export const Wallet = () => {
+  const { walletId } = useParams<{ walletId: string }>();
   const [loading, setLoading] = useState(true);
   const [releasesList, setReleasesList] = useState<IReleasesList[]>([]);
 
@@ -37,13 +41,15 @@ export const Wallet = () => {
 
   const [modalAddNewStockIsOpen, setModalAddNewStockIsOpen] = useState(false);
   const [modalEditReleaseIsOpen, setModalEditReleaseIsOpen] = useState(false);
+  const [modalCreateWalletIsOpen, setModalCreateWalletIsOpen] = useState(false);
+  const [modalEditWalletIsOpen, setModalEditWalletIsOpen] = useState(false);
 
   console.log(stocksWalletList);
 
   //#region Releases API's
 
   async function requestReleasesList() {
-    await Api.get(`/release?walletId=${1}`)
+    await Api.get(`/release?walletId=${walletId}`)
       .then((res) => {
         setReleasesList(res.data);
       })
@@ -95,7 +101,7 @@ export const Wallet = () => {
   async function requestWallet() {
     setLoading(true);
 
-    await Api.get(`/release/wallet?walletId=${1}`)
+    await Api.get(`/release/wallet?walletId=${walletId}`)
       .then((res) => {
         setStocksWalletList(res.data.stocks);
         setValueApplied(res.data.valueApplied);
@@ -137,6 +143,26 @@ export const Wallet = () => {
         <ModalEditRelease
           releaseDetails={selectedRelease}
           setModal={setModalEditReleaseIsOpen}
+          callback={() => {
+            requestReleasesList();
+            requestWallet();
+          }}
+        />
+      )}
+
+      {modalCreateWalletIsOpen && (
+        <ModalCreateWallet
+          setModal={setModalCreateWalletIsOpen}
+          callback={() => {
+            requestReleasesList();
+            requestWallet();
+          }}
+        />
+      )}
+
+      {modalEditWalletIsOpen && (
+        <ModalEditWallet
+          setModal={setModalEditWalletIsOpen}
           callback={() => {
             requestReleasesList();
             requestWallet();
@@ -189,6 +215,11 @@ export const Wallet = () => {
               <h6>Carteiras</h6>
 
               <p className="p5">Carteira 1</p>
+
+              <Style.WalletButtonsContainer>
+                <IconButton icon={icons.pencil} onClick={() => setModalEditWalletIsOpen(true)} />
+                <IconButton icon={icons.plus} onClick={() => setModalCreateWalletIsOpen(true)} />
+              </Style.WalletButtonsContainer>
             </Style.WalletInfosWrapper>
           </Style.WalletInfosContainer>
 
