@@ -21,7 +21,6 @@ export const PreferredAssets = () => {
   const [favoriteAssets, setFavoriteAssets] = useState([]);
   const isFavoriteIcon = <img src={icons.heartFill}/>
   const isNotFavoriteIcon = <img src={icons.heart}/>
-
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
     await BrApi.get(`/quote/list?search=${search}&limit=10&token=hXAyiiQ3NhNz1Kp1ciC6pu`).then(
@@ -31,8 +30,6 @@ export const PreferredAssets = () => {
         });
       },
     );
-
-    console.log('options', options)
     return options;
   }
 
@@ -50,8 +47,10 @@ export const PreferredAssets = () => {
   }
 
   async function sendFavorite(formdata: IFavoriteAsset) {
-    await Api.post('/favoriteAssets', {asset: formdata})
+    const userId = localStorage.getItem('userId');
+    await Api.post('/favoriteAssets', {asset: formdata.asset, user:{id: userId }})
       .then(() => {
+        setFavorite(false)
         requestFavoriteAssets();
         toast.success('Ativo favoritado com sucesso!');
       })
@@ -84,9 +83,11 @@ export const PreferredAssets = () => {
           loadOptions={requestStocks}
           style={Style.selectStyles}
           onChange={(evt) => sendFavorite({
+           asset:{
             companyImage: evt.icon as string,
             corporateReason:  evt.value as string,
             name:  evt.value as string
+           },
           })}
         />
         </Style.SearchContainer>

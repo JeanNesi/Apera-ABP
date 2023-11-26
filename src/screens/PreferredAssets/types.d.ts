@@ -1,5 +1,7 @@
 export interface IFavoriteAsset {
-  companyImage: string,
-  corporateReason: string,
-  name: string
+  asset: {
+    companyImage: string,
+    corporateReason: string,
+    name: string
+  }
 }
