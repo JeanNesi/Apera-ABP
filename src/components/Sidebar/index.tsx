@@ -34,7 +34,10 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
       </Style.SearchContainer>
       <Style.SidebarOptionsContainer>
         {sidebarContent.map(({ icon, label, url }) => (
-          <Link to={url} key={url}>
+          <Link
+            to={url === '/wallet' ? `/wallet/${localStorage.getItem('walletId')}` : url}
+            key={url}
+          >
             <Style.SidebarOption $isSelected={window.location.pathname === url}>
               <img src={icon} alt="" />
               <p>{label}</p>

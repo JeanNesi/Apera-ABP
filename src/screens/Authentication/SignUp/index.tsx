@@ -62,7 +62,7 @@ export const SignUp = () => {
     { label: 'Empresa', value: 'company' },
   ];
 
-  async function createUserAccount(data: IFormData) {
+  async function createUserCompany(data: IFormData) {
     setOnQuery(true);
     await Api.post('/userRegistration/company', {
       address: {
@@ -78,6 +78,41 @@ export const SignUp = () => {
       cnpj: unMask(data.cnpj),
       corporateReason: data.corporateReason,
       fantasyName: data.fantasyName,
+      phoneNumber: unMask(data.phoneNumber),
+      user: {
+        username: data.userName,
+        email: data.email,
+        password: data.password,
+      },
+    })
+      .then(() => {
+        toast.success('Cadastro realizado com sucesso!');
+        navigate('/login');
+        setOnQuery(false);
+      })
+      .catch((error) => {
+        catchHandler(error);
+        setOnQuery(false);
+      });
+  }
+
+  async function createUserPerson(data: IFormData) {
+    setOnQuery(true);
+    await Api.post('/userRegistration/person', {
+      address: {
+        cep: null,
+        city: null,
+        complement: null,
+        id: null,
+        neighborhood: null,
+        number: null,
+        street: null,
+        uf: null,
+      },
+      birthDate: data.birthDate,
+      cpf: unMask(data.cnpj),
+      gender: data.gender,
+      name: data.name,
       phoneNumber: unMask(data.phoneNumber),
       user: {
         username: data.userName,
@@ -116,7 +151,8 @@ export const SignUp = () => {
         }}
         validateOnChange={true}
         onSubmit={async (data: IFormData) => {
-          createUserAccount(data);
+          if (selectedTab.value === 'company') createUserCompany(data);
+          else createUserPerson(data);
         }}
       >
         {({ errors, values, touched, setFieldValue }) => (
@@ -226,9 +262,9 @@ export const SignUp = () => {
                       />
 
                       <FormikSelect name="gender" label="Sexo">
-                        <option value="masc">Masculino</option>
-                        <option value="fem">Feminino</option>
-                        <option value="nf">Não informado</option>
+                        <option value="MASCULINO">Masculino</option>
+                        <option value="FEMININO">Feminino</option>
+                        <option value="NAO_INFORMADO">Não informado</option>
                       </FormikSelect>
                     </>
                   )}

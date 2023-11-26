@@ -10,4 +10,5 @@ interface ILoginData {
   refreshToken: string;
   roles: string[];
   username: string;
+  wallets: { id: string }[];
 }

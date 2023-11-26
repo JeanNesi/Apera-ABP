@@ -37,6 +37,89 @@ export const Settings = () => {
       .oneOf([yup.ref('password')], 'Senhas não conferem!'),
   });
 
+  // async function requestUserInfos(data: IFormData) {
+  //   setOnQuery(true);
+  //   await Api.get('/userRegistration/company')
+  //     .then(() => {
+  //       toast.success('Cadastro realizado com sucesso!');
+  //       navigate('/login');
+  //       setOnQuery(false);
+  //     })
+  //     .catch((error) => {
+  //       catchHandler(error);
+  //       setOnQuery(false);
+  //     });
+  // }
+
+  // async function createUserCompany(data: IFormData) {
+  //   setOnQuery(true);
+  //   await Api.post('/userRegistration/company', {
+  //     address: {
+  //       cep: null,
+  //       city: null,
+  //       complement: null,
+  //       id: null,
+  //       neighborhood: null,
+  //       number: null,
+  //       street: null,
+  //       uf: null,
+  //     },
+  //     cnpj: unMask(data.cnpj),
+  //     corporateReason: data.corporateReason,
+  //     fantasyName: data.fantasyName,
+  //     phoneNumber: unMask(data.phoneNumber),
+  //     user: {
+  //       username: data.userName,
+  //       email: data.email,
+  //       password: data.password,
+  //     },
+  //   })
+  //     .then(() => {
+  //       toast.success('Cadastro realizado com sucesso!');
+  //       navigate('/login');
+  //       setOnQuery(false);
+  //     })
+  //     .catch((error) => {
+  //       catchHandler(error);
+  //       setOnQuery(false);
+  //     });
+  // }
+
+  // async function createUserPerson(data: IFormData) {
+  //   setOnQuery(true);
+  //   await Api.post('/userRegistration/person', {
+  //     address: {
+  //       cep: null,
+  //       city: null,
+  //       complement: null,
+  //       id: null,
+  //       neighborhood: null,
+  //       number: null,
+  //       street: null,
+  //       uf: null,
+  //     },
+  //     birthDate: data.birthDate,
+  //     cpf: unMask(data.cnpj),
+  //     gender: data.gender,
+  //     name: data.name,
+  //     phoneNumber: unMask(data.phoneNumber),
+  //     user: {
+  //       username: data.userName,
+  //       email: data.email,
+  //       password: data.password,
+  //     },
+  //   })
+  //     .then(() => {
+  //       toast.success('Cadastro realizado com sucesso!');
+  //       navigate('/login');
+  //       setOnQuery(false);
+  //     })
+  //     .catch((error) => {
+  //       catchHandler(error);
+  //       setOnQuery(false);
+  //     });
+  // }
+
   async function editUserInfos(data: IFormData) {
     setOnQuery(true);
     await Api.put(`/login/${user?.id}`, {
@@ -122,11 +205,12 @@ export const Settings = () => {
             validationSchema={schema}
             initialValues={{
               name: 'Apera',
+              userName: '',
               email: 'apera@gmail.com',
               birthDate: dateToISOString(new Date()),
               cnpj: '00.000.000/0001-22',
               corporateReason: 'Apera LTDA',
-              fantasy_name: 'Apera',
+              fantasyName: 'Apera',
               gender: '',
               cpf: '123.456.789-10',
               phoneNumber: '(48) 99999-9999',
