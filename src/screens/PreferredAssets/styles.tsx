@@ -7,6 +7,14 @@ export const Container = styled.div``;
 export const SearchContainer = styled.div`
 `;
 
+export const LoadingContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80dvh;
+`;
+
+
 export const StockCell = styled.div`
   display: flex;
   align-items: center;
@@ -30,6 +38,26 @@ export const FavoriteButtonContainer = styled.div`
 
 export const FavoriteButton = styled.button`
 background-color: transparent;
+`;
+
+export const NoResultsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: ${theme.size.xsm};
+  height: 70dvh;
+
+  img {
+    width: 50%;
+  }
+
+  h5 {
+    margin-top: ${theme.size.md};
+    max-width: 300px;
+    text-align: center;
+    color: ${theme.color.secondary};
+  }
 `;
 
 export const selectStyles: StylesConfig = {

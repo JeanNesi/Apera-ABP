@@ -1,17 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { icons } from '../../assets/icons';
 import { IconButton } from '../../components/Buttons/IconButton';
+import { DotLoading } from '../../components/DotLoading';
 import ReactAsyncSelect from '../../components/ReactAsyncSelect';
 import { Table, TableContent } from '../../components/Table';
+import { Api } from '../../services/api';
 import { BrApi } from '../../services/brApi';
 import { theme } from '../../styles/theme';
+import { catchHandler } from '../../utils/functions';
 import * as Style from './styles';
+import { IFavoriteAsset } from './types';
 
 export const PreferredAssets = () => {
   const navigate = useNavigate();
   const [favorite, setFavorite] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
+  const [onquery, setOnQuery] = useState(false);
+  const [favoriteAssets, setFavoriteAssets] = useState([]);
   const isFavoriteIcon = <img src={icons.heartFill}/>
   const isNotFavoriteIcon = <img src={icons.heart}/>
 
@@ -24,11 +31,45 @@ export const PreferredAssets = () => {
         });
       },
     );
+
+    console.log('options', options)
     return options;
   }
+
+  async function requestFavoriteAssets() {
+    setOnQuery(true);
+    await Api.get('/favoriteAssets')
+      .then(({ data }) => {
+       setFavoriteAssets(data.content)
+        setOnQuery(false);
+      })
+      .catch((error) => {
+        catchHandler(error);
+        setOnQuery(false);
+      });
+  }
+
+  async function sendFavorite(formdata: IFavoriteAsset) {
+    await Api.post('/favoriteAssets', {asset: formdata})
+      .then(() => {
+        requestFavoriteAssets();
+        toast.success('Ativo favoritado com sucesso!');
+      })
+      .catch((error) => {
+        catchHandler(error);
+      });
+  }
+
+  useEffect(() => {
+    requestFavoriteAssets()
+  }, [])
   return (
     <Style.Container>
-
+    {onquery && (
+        <Style.LoadingContainer>
+          <DotLoading />
+        </Style.LoadingContainer>
+      )}
         <IconButton
           label="Adicionar ativo favorito"
           icon={icons.plus}
@@ -42,25 +83,29 @@ export const PreferredAssets = () => {
           <ReactAsyncSelect
           loadOptions={requestStocks}
           style={Style.selectStyles}
-          onChange={(evt) => navigate(`/dashboard/${evt.value}`)}
+          onChange={(evt) => sendFavorite({
+            companyImage: evt.icon as string,
+            corporateReason:  evt.value as string,
+            name:  evt.value as string
+          })}
         />
         </Style.SearchContainer>
         }
 
-    <Table
+    {!onquery && !favoriteAssets.length && <Table
       colsHeader={[
         { label: 'Ativo' },
         { label: '' },
       ]}
     >
-        <TableContent
-          key={'pele'}
+       {favoriteAssets.map((el: any) =>  <TableContent
+          key={el.id}
           colsBody={[
             {
               cell: (
-                <Style.StockCell onClick={() => navigate(`/dashboard/pele`)}>
-                  <img src={'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Pele_con_brasil_%28cropped%29.jpg/250px-Pele_con_brasil_%28cropped%29.jpg'} alt="" />
-                  <p className="p3">{'pele'}</p>
+                <Style.StockCell onClick={() => navigate(`/dashboard/${el.name}`)}>
+                  <img src={el.companyImage} alt="" />
+                  <p className="p3">{el.name}</p>
                 </Style.StockCell>
               ),
               cssProps: {
@@ -77,8 +122,16 @@ export const PreferredAssets = () => {
               ),
             },
           ]}
-        />
-    </Table>
+        />)}
+    </Table>}
+
+    {!onquery && !favoriteAssets.length && (
+        <Style.NoResultsContainer>
+          <img src={icons.finance} alt="" />
+          <h5>Sua lista de ativos favoritos está vazia!</h5>
+          <p className="p2">Favorite um ativo para visualizar.</p>
+        </Style.NoResultsContainer>
+      )}
     </Style.Container>
 
   );
