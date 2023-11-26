@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Api } from '../../services/api';
 import { toast } from 'react-toastify';
-import { IReleasesList, ITab, IStockData, IStocksWalletList } from './types';
+import { IReleasesList, ITab, IStockData, IStocksWalletList, IWalletList } from './types';
 import { DotLoading } from '../../components/DotLoading';
 import { IconButton } from '../../components/Buttons/IconButton';
 import { icons } from '../../assets/icons';
@@ -14,12 +14,15 @@ import { ModalAddNewStock } from './utils/ModalAddNewStock';
 import { ModalEditRelease } from './utils/ModalEditRelease';
 import { BrApi } from '../../services/brApi';
 import { applyMask } from '../../utils/functions';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { ModalCreateWallet } from './utils/ModalCreateWallet';
 import { ModalEditWallet } from './utils/ModalEditWallet';
 
 export const Wallet = () => {
+  const navigate = useNavigate();
   const { walletId } = useParams<{ walletId: string }>();
+  const location = useLocation();
+
   const [loading, setLoading] = useState(true);
   const [releasesList, setReleasesList] = useState<IReleasesList[]>([]);
 
@@ -28,6 +31,11 @@ export const Wallet = () => {
 
   const [valueApplied, setValueApplied] = useState(0);
   const [grossBalance, setGrossBalance] = useState(0);
+  const [walletName, setWalletName] = useState('');
+
+  const [selectedWalletId, setSelectedWalletId] = useState(walletId);
+
+  const [walletsList, setWalletsList] = useState<IWalletList[]>([]);
 
   const [selectedTab, setSelectedTab] = useState<ITab>({
     label: 'Saídas',
@@ -44,11 +52,10 @@ export const Wallet = () => {
   const [modalCreateWalletIsOpen, setModalCreateWalletIsOpen] = useState(false);
   const [modalEditWalletIsOpen, setModalEditWalletIsOpen] = useState(false);
 
-  console.log(stocksWalletList);
-
   //#region Releases API's
 
   async function requestReleasesList() {
+    setLoading(true);
     await Api.get(`/release?walletId=${walletId}`)
       .then((res) => {
         setReleasesList(res.data);
@@ -99,12 +106,11 @@ export const Wallet = () => {
   }
 
   async function requestWallet() {
-    setLoading(true);
-
     await Api.get(`/release/wallet?walletId=${walletId}`)
       .then((res) => {
         setStocksWalletList(res.data.stocks);
         setValueApplied(res.data.valueApplied);
+        setWalletName(res.data.name);
 
         if (res.data.stocks.length) {
           const tickers = res.data.stocks
@@ -118,14 +124,28 @@ export const Wallet = () => {
       .catch(() => toast.error('Algo deu errado'));
   }
 
+  async function requestWalletsList() {
+    await Api.get(`/wallet/user/${localStorage.getItem('userId')}`)
+      .then((res) => {
+        setWalletsList(res.data);
+      })
+      .catch(() => toast.error('Algo deu errado'));
+  }
+
   function calcVariantion() {
+    if (!stocksWalletList.length) return 0;
     return 100 - 100 * (valueApplied / grossBalance);
   }
 
   useEffect(() => {
     requestWallet();
+    requestWalletsList();
     requestReleasesList();
-  }, []);
+
+    return () => {
+      localStorage.setItem('walletId', selectedWalletId ?? '');
+    };
+  }, [location.pathname]);
 
   return (
     <Style.Container>
@@ -154,26 +174,83 @@ export const Wallet = () => {
         <ModalCreateWallet
           setModal={setModalCreateWalletIsOpen}
           callback={() => {
-            requestReleasesList();
-            requestWallet();
+            requestWalletsList();
           }}
         />
       )}
 
       {modalEditWalletIsOpen && (
         <ModalEditWallet
+          walletName={walletName}
           setModal={setModalEditWalletIsOpen}
           callback={() => {
             requestReleasesList();
             requestWallet();
+            requestWalletsList();
           }}
         />
       )}
 
-      {loading && (
-        <Style.LoadingContainer>
-          <DotLoading />
-        </Style.LoadingContainer>
+      {!loading && (
+        <Style.WalletInfosContainer>
+          <Style.WalletInfosWrapper>
+            <img src={icons.piggyBank} alt="" />
+            <h6>Valor aplicado</h6>
+            <p className="p5">
+              {
+                applyMask({
+                  mask: 'BRL',
+                  value: String(!!stocksWalletList.length ? valueApplied : 0),
+                }).value
+              }
+            </p>
+          </Style.WalletInfosWrapper>
+
+          <Style.WalletInfosWrapper>
+            <img src={icons.circleDollar} alt="" />
+            <h6>Saldo bruto</h6>
+            <p className="p5">
+              {
+                applyMask({
+                  mask: 'BRL',
+                  value: String(!!stocksWalletList.length ? grossBalance : 0),
+                }).value
+              }
+            </p>
+          </Style.WalletInfosWrapper>
+
+          <Style.WalletInfosWrapper>
+            <img src={icons.percent} alt="" />
+            <h6>Variação</h6>
+            <Style.VariationValueContainer className="p5" $variation={calcVariantion()}>
+              {calcVariantion() > 0 ? '+ ' : ''}
+              {calcVariantion().toFixed(2)}%
+            </Style.VariationValueContainer>
+          </Style.WalletInfosWrapper>
+
+          <Style.WalletInfosWrapper>
+            <img src={icons.wallet} alt="" />
+            <h6>Carteiras</h6>
+
+            <select
+              value={selectedWalletId}
+              defaultValue={walletId}
+              onChange={(evt) => {
+                setSelectedWalletId(evt.target.value);
+                navigate(`/wallet/${evt.target.value}`);
+              }}
+            >
+              {walletsList.map((element) => (
+                <option value={element.id}>{element.name}</option>
+              ))}
+            </select>
+
+            <Style.WalletButtonsContainer>
+              <IconButton icon={icons.pencil} onClick={() => setModalEditWalletIsOpen(true)} />
+              <IconButton icon={icons.plus} onClick={() => setModalCreateWalletIsOpen(true)} />
+            </Style.WalletButtonsContainer>
+          </Style.WalletInfosWrapper>
+        </Style.WalletInfosContainer>
       )}
 
       {!loading && !stocksWalletList.length && !releasesList.length && (
@@ -188,41 +265,6 @@ export const Wallet = () => {
 
       {!loading && (!!stocksWalletList.length || !!releasesList.length) && (
         <>
-          <Style.WalletInfosContainer>
-            <Style.WalletInfosWrapper>
-              <img src={icons.piggyBank} alt="" />
-              <h6>Valor aplicado</h6>
-              <p className="p5">{applyMask({ mask: 'BRL', value: String(valueApplied) }).value}</p>
-            </Style.WalletInfosWrapper>
-
-            <Style.WalletInfosWrapper>
-              <img src={icons.circleDollar} alt="" />
-              <h6>Saldo bruto</h6>
-              <p className="p5">{applyMask({ mask: 'BRL', value: String(grossBalance) }).value}</p>
-            </Style.WalletInfosWrapper>
-
-            <Style.WalletInfosWrapper>
-              <img src={icons.percent} alt="" />
-              <h6>Variação</h6>
-              <Style.VariationValueContainer className="p5" $variation={calcVariantion()}>
-                {calcVariantion() > 0 ? '+ ' : ''}
-                {calcVariantion().toFixed(2)}%
-              </Style.VariationValueContainer>
-            </Style.WalletInfosWrapper>
-
-            <Style.WalletInfosWrapper>
-              <img src={icons.wallet} alt="" />
-              <h6>Carteiras</h6>
-
-              <p className="p5">Carteira 1</p>
-
-              <Style.WalletButtonsContainer>
-                <IconButton icon={icons.pencil} onClick={() => setModalEditWalletIsOpen(true)} />
-                <IconButton icon={icons.plus} onClick={() => setModalCreateWalletIsOpen(true)} />
-              </Style.WalletButtonsContainer>
-            </Style.WalletInfosWrapper>
-          </Style.WalletInfosContainer>
-
           <Style.ButtonsContainer>
             <IconButton
               label="Adicionar lançamento"
@@ -250,6 +292,12 @@ export const Wallet = () => {
             </Style.TabsHeader>
           </Style.TabsContainer>
         </>
+      )}
+
+      {loading && (
+        <Style.LoadingContainer>
+          <DotLoading />
+        </Style.LoadingContainer>
       )}
 
       {selectedTab.value === 'wallet' && !loading && !!stocksWalletList.length && (

@@ -10,3 +10,10 @@ export const Container = styled.div`
     margin-top: ${theme.size.sm};
   }
 `;
+
+export const ButtonsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${theme.size.sm};
+  justify-content: center;
+`;

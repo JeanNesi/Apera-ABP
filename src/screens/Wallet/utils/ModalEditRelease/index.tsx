@@ -13,8 +13,10 @@ import { applyMask, dateToISOString, unMask } from '../../../../utils/functions'
 import * as yup from 'yup';
 import { Api } from '../../../../services/api';
 import { toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 export const ModalEditRelease = ({ setModal, callback, releaseDetails }: IModalEditRelease) => {
+  const { walletId } = useParams<{ walletId: string }>();
   const [onQuery, setOnQuery] = useState(false);
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [selectedTransactionType, setSelectedTransactionType] = useState<'COMPRA' | 'VENDA'>(
@@ -45,7 +47,7 @@ export const ModalEditRelease = ({ setModal, callback, releaseDetails }: IModalE
       price: Number(unMask(data.value)),
       releaseType: selectedTransactionType,
       wallet: {
-        id: 1,
+        id: walletId,
       },
     })
       .then(() => {

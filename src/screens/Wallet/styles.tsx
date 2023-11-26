@@ -60,6 +60,10 @@ export const WalletInfosContainer = styled.div`
   gap: ${theme.size.sm};
   align-items: center;
   margin-bottom: ${theme.size.md};
+
+  @media (max-width: 900px) {
+    justify-content: center;
+  }
 `;
 
 export const WalletInfosWrapper = styled.div`
@@ -97,6 +101,12 @@ export const WalletInfosWrapper = styled.div`
   padding: ${theme.size.sm};
   border-radius: ${theme.size.xsm};
   align-items: center;
+
+  select {
+    padding: 2px;
+    background-position: right 0 top 50%, 0 0;
+    border: none;
+  }
 
   p {
     font-weight: 700;

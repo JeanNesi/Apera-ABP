@@ -10,6 +10,11 @@ export interface IStocksWalletList {
   balance: string;
 }
 
+export interface IWalletList {
+  id: string;
+  name: string;
+}
+
 export type TIabOptions = 'wallet' | 'releases';
 export interface ITab {
   label: string;

@@ -42,6 +42,7 @@ export const Login = () => {
         localStorage.setItem('authToken', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
         localStorage.setItem('userId', String(data.id));
+        localStorage.setItem('walletId', String(data.wallets[0].id));
 
         setOnQuery(false);
       })

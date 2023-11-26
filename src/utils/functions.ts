@@ -108,7 +108,7 @@ export function catchHandler(err: ICatchHandler) {
   toast.dismiss();
   if (err.response?.data) {
     if (err.response.data.message) toast.error(err.response.data.message);
-    else if (err.response?.data) toast.error(err.response.data.message);
+    else if (err.response?.data) toast.error(err.response.data);
     else toast.error(`Erro: ${err.response.status}`);
   } else {
     toast.error('Erro de comunicação');
