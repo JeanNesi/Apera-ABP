@@ -70,7 +70,5 @@ export const NotLoggedButtonsContainer = styled.div`
 `;
 
 export const SearchContainer = styled.div`
-  @media (max-width: 900px) {
-    display: none;
-  }
+
 `;

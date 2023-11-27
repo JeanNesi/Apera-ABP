@@ -39,6 +39,10 @@ export const StockDetailsRightSide = styled.div`
   }
 `;
 
+export const FavoriteButton = styled.button`
+background-color: transparent;
+`;
+
 export const StockValuesContainer = styled.div`
   display: flex;
   justify-content: space-between;

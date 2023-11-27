@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { icons } from '../../assets/icons';
-import * as Style from './styles';
 import { Search } from '../Search';
+import * as Style from './styles';
 
 export const Sidebar = ({ isOpen }: ISidebar) => {
   const sidebarContent: ISidebarContent[] = [
@@ -16,10 +16,16 @@ export const Sidebar = ({ isOpen }: ISidebar) => {
       url: '/wallet',
     },
     {
+      icon: icons.heartMenu,
+      label: 'Favoritos',
+      url: '/preferredAssets',
+    },
+    {
       icon: icons.gear,
       label: 'Configurações',
       url: '/settings',
     },
+
     {
       icon: icons.power,
       label: 'Sair',

@@ -1,25 +1,27 @@
 import { ApexOptions } from 'apexcharts';
-import ReactApexChart from 'react-apexcharts';
-import { theme } from '../../styles/theme';
 import { useEffect, useState } from 'react';
-import { Slider } from '../../components/Slider';
-import * as Style from './styles';
-import { DotLoading } from '../../components/DotLoading';
+import ReactApexChart from 'react-apexcharts';
 import { useParams } from 'react-router-dom';
-import { NotFound } from '../../components/NotFound';
 import { toast } from 'react-toastify';
-import { StockCard } from '../../components/StockCard';
-import { formatCurrencyBRL, numericScaleIdentifier } from '../../utils/functions';
 import { icons } from '../../assets/icons';
+import { DotLoading } from '../../components/DotLoading';
+import { NotFound } from '../../components/NotFound';
+import { Slider } from '../../components/Slider';
+import { StockCard } from '../../components/StockCard';
+import { Api } from '../../services/api';
 import { BrApi } from '../../services/brApi';
+import { theme } from '../../styles/theme';
+import { catchHandler, formatCurrencyBRL, numericScaleIdentifier } from '../../utils/functions';
+import * as Style from './styles';
 
 export const Dashboard = () => {
   const { stockName } = useParams<{ stockName: string }>();
 
   const [loading, setLoading] = useState(true);
-
+  const [favorite, setFavorite] = useState(false);
   const [stockSeries, setStockSeries] = useState<number[][]>([]);
   const [stockData, setStockData] = useState<IStockData>();
+  const [assetId, setAssetId] = useState('');
   const [stocksList, setStocksList] = useState<IStocks[]>([]);
   const [lastUpdate, setLastUpdate] = useState('');
 
@@ -58,9 +60,47 @@ export const Dashboard = () => {
       });
   }
 
+  async function requestFavorite() {
+    const userId = localStorage.getItem('userId')
+      await Api.get(`/favoriteAssets/name/${stockName}/${userId}`)
+        .then(({ data }) => {
+          setFavorite(data.length > 0)
+          setAssetId(data[0].id)
+        })
+        .catch((error) => {
+          catchHandler(error);
+        });
+  }
+
+  async function sendFavorite() {
+    const userId = localStorage.getItem('userId');
+      return await Api.post('/favoriteAssets', {asset:{
+        companyImage: stockData?.logourl,
+        corporateReason: stockData?.symbol,
+        name: stockData?.symbol
+      }, user:{id: userId }})
+      .then(() => {
+        toast.success('Ativo favoritado com sucesso!');
+      })
+      .catch((error) => {
+        catchHandler(error);
+      });
+  }
+
+  async function deleteFavorite() {
+    await Api.delete(`/favoriteAssets/${Number(assetId)}`)
+      .then(() => {
+        toast.success('Ativo desfavoritado com sucesso!');
+      })
+      .catch((error) => {
+        catchHandler(error);
+      });
+  }
+
   useEffect(() => {
     requestStocks();
     requestStockData();
+    requestFavorite()
   }, [stockName]);
 
   const series = [
@@ -126,6 +166,7 @@ export const Dashboard = () => {
     },
   };
 
+
   return (
     <div>
       {loading && (
@@ -146,7 +187,21 @@ export const Dashboard = () => {
             </Style.StockDetailsLeftSide>
 
             <Style.StockDetailsRightSide>
+              <div style={{display: 'flex', alignItems: 'center'}}>
               <p className="p3">Última atualização</p>
+              <Style.FavoriteButton onClick={() => {
+                if(favorite){
+                  deleteFavorite()
+                  setFavorite(false)
+                }else{
+                  sendFavorite()
+                  setFavorite(true)
+                }
+              }}>
+               {favorite ? <img src={icons.heartFill} alt="" style={{width: 16, height: 16}} /> : <img src={icons.heart} alt="" style={{width: 16, height: 16}} />}
+              </Style.FavoriteButton>
+
+              </div>
               <div>
                 <p className="p2">{new Date(lastUpdate).toLocaleDateString('pt-br')}</p>
                 <p className="p2">{new Date(lastUpdate).toLocaleTimeString('pt-br')}</p>
