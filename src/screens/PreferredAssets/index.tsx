@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { icons } from '../../assets/icons';
 import { IconButton } from '../../components/Buttons/IconButton';
@@ -14,13 +13,11 @@ import * as Style from './styles';
 import { IFavoriteAsset } from './types';
 
 export const PreferredAssets = () => {
-  const navigate = useNavigate();
-  const [favorite, setFavorite] = useState(true);
   const [showSearch, setShowSearch] = useState(false);
   const [onquery, setOnQuery] = useState(false);
   const [favoriteAssets, setFavoriteAssets] = useState([]);
   const isFavoriteIcon = <img src={icons.heartFill}/>
-  const isNotFavoriteIcon = <img src={icons.heart}/>
+
   async function requestStocks(search?: string) {
     let options: { value: string; label: string; icon: string }[] = [];
     await BrApi.get(`/quote/list?search=${search}&limit=10&token=hXAyiiQ3NhNz1Kp1ciC6pu`).then(
@@ -35,9 +32,10 @@ export const PreferredAssets = () => {
 
   async function requestFavoriteAssets() {
     setOnQuery(true);
-    await Api.get('/favoriteAssets')
+    const userId = localStorage.getItem('userId')
+    await Api.get(`/favoriteAssets/user?userId=${userId}`)
       .then(({ data }) => {
-       setFavoriteAssets(data.content)
+        setFavoriteAssets(data)
         setOnQuery(false);
       })
       .catch((error) => {
@@ -48,11 +46,26 @@ export const PreferredAssets = () => {
 
   async function sendFavorite(formdata: IFavoriteAsset) {
     const userId = localStorage.getItem('userId');
-    await Api.post('/favoriteAssets', {asset: formdata.asset, user:{id: userId }})
+    const exists = favoriteAssets.find((el: any) => el.asset.name === formdata.asset.name)
+    if(exists){
+      return toast.error('Ativo já favoritado!');
+    }else{
+      return await Api.post('/favoriteAssets', {asset: formdata.asset, user:{id: userId }})
       .then(() => {
-        setFavorite(false)
         requestFavoriteAssets();
         toast.success('Ativo favoritado com sucesso!');
+      })
+      .catch((error) => {
+        catchHandler(error);
+      });
+    }
+  }
+
+  async function deleteFavorite(id: string) {
+    await Api.delete(`/favoriteAssets/${Number(id)}`)
+      .then(() => {
+        requestFavoriteAssets();
+        toast.success('Ativo desfavoritado com sucesso!');
       })
       .catch((error) => {
         catchHandler(error);
@@ -64,21 +77,23 @@ export const PreferredAssets = () => {
   }, [])
   return (
     <Style.Container>
+
     {onquery && (
         <Style.LoadingContainer>
           <DotLoading />
         </Style.LoadingContainer>
       )}
-        <IconButton
+
+  {!onquery &&   <IconButton
           label="Adicionar ativo favorito"
           icon={icons.plus}
           className="p3"
           color={theme.color.success}
           onClick={() => setShowSearch(!showSearch)}
-        />
+        />}
 
 
-    {showSearch && <Style.SearchContainer>
+    {showSearch && !onquery && <Style.SearchContainer>
           <ReactAsyncSelect
           loadOptions={requestStocks}
           style={Style.selectStyles}
@@ -93,7 +108,7 @@ export const PreferredAssets = () => {
         </Style.SearchContainer>
         }
 
-    {!onquery && !favoriteAssets.length && <Table
+    {!onquery && favoriteAssets.length > 0 && <Table
       colsHeader={[
         { label: 'Ativo' },
         { label: '' },
@@ -104,9 +119,9 @@ export const PreferredAssets = () => {
           colsBody={[
             {
               cell: (
-                <Style.StockCell onClick={() => navigate(`/dashboard/${el.name}`)}>
-                  <img src={el.companyImage} alt="" />
-                  <p className="p3">{el.name}</p>
+                <Style.StockCell>
+                  <img src={el.asset.companyImage} alt="" />
+                  <p className="p3">{el.asset.name}</p>
                 </Style.StockCell>
               ),
               cssProps: {
@@ -116,8 +131,8 @@ export const PreferredAssets = () => {
             {
               cell: (
                 <Style.FavoriteButtonContainer>
-                  <Style.FavoriteButton onClick={() => setFavorite(!favorite)}>
-                {favorite ? isFavoriteIcon : isNotFavoriteIcon}
+                  <Style.FavoriteButton onClick={() => deleteFavorite(el.id)}>
+                    {isFavoriteIcon}
                   </Style.FavoriteButton>
                 </Style.FavoriteButtonContainer>
               ),
